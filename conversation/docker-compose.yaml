@@ -1,0 +1,30 @@
+x-shared-env: &shared-api-worker-env
+  NEXT_PUBLIC_DEPLOY_ENV: ${NEXT_PUBLIC_API_URL:-DEVELOPMENT}
+  NEXT_PUBLIC_EDITION: ${NEXT_PUBLIC_API_URL:-SELF_HOSTED}
+  NEXT_PUBLIC_API_PREFIX: ${NEXT_PUBLIC_API_URL:-https://api.dify.ai/v1}
+  NEXT_PUBLIC_PUBLIC_API_PREFIX: ${NEXT_PUBLIC_API_URL:-https://api.dify.ai/v1}
+  NEXT_PUBLIC_SENTRY_DSN: ${NEXT_PUBLIC_API_URL:-}
+  NEXT_TELEMETRY_DISABLED: ${NEXT_PUBLIC_API_URL:-1}
+  NEXT_PUBLIC_UPLOAD_IMAGE_AS_ICON: ${NEXT_PUBLIC_API_URL:-false}
+  NEXT_PUBLIC_TEXT_GENERATION_TIMEOUT_MS: ${NEXT_PUBLIC_API_URL:-60000}
+  NEXT_PUBLIC_CSP_WHITELIST: ${NEXT_PUBLIC_API_URL:-}
+  NEXT_PUBLIC_TOP_K_MAX_VALUE: ${NEXT_PUBLIC_API_URL:-10}
+  NEXT_PUBLIC_INDEXING_MAX_SEGMENTATION_TOKENS_LENGTH: ${NEXT_PUBLIC_API_URL:-4000}
+
+services:
+  conversation:
+    container_name: conversation
+    image: node:20-alpine
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    working_dir: /app
+    command: ["yarn", "dev"]
+    ports:
+      - 3000:3000
+    volumes:
+      # Mount the storage directory to the container, for storing user files.
+      - ./:/app
+    environment:
+      # Use the shared environment variables.
+      <<: *shared-api-worker-env

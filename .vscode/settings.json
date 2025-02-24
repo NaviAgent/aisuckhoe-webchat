@@ -2,9 +2,9 @@
   "typescript.tsdk": ".yarn/cache/typescript-patch-72dc6f164f-ab417a2f39.zip/node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "prettier.enable": false,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": false
   },
   "[python]": {
     "editor.formatOnType": true
