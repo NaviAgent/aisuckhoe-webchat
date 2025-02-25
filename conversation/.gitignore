@@ -49,3 +49,7 @@ yarn.lock
 
 # pmpm
 pnpm-lock.yaml
+
+# lockfile
+*-lock*
+*.lock*

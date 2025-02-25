@@ -29,6 +29,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -55,3 +56,6 @@ pnpm-lock.yaml
 # mise
 mise.toml
 
+# lockfile
+*-lock*
+*.lock*
