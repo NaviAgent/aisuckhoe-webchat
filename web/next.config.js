@@ -39,7 +39,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/apps',
+        destination: '/chat',
         permanent: false,
       },
     ]
