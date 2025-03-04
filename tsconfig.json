@@ -1,42 +1,14 @@
 {
+  "extends": "./react-library.json",
+  "include": ["src/**/*"],
   "compilerOptions": {
-    "target": "es2015",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "app/components/develop/Prose.jsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+      "@/*": ["src/*"]
+    },
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "emitDeclarationOnly": true
+  }
 }
