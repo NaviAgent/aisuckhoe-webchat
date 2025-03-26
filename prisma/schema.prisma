@@ -1,0 +1,51 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Profile {
+  id             String        @id @default(uuid(7))
+  name           String
+  avatar         String?
+  gender         String
+  age            Int
+  dob            DateTime
+  medicalHistory String?
+  createdAt      DateTime      @default(now())
+  relationship   String
+  ownerId        String
+  ChatSession    ChatSession[]
+  metadata      Json
+}
+
+model UserQuota {
+  ownerId       String    @id @default(uuid(7))
+  title         String
+  maxTokens     Int
+  usedTokens    Int       @default(0)
+  maxImages     Int
+  usedImages    Int       @default(0)
+  maxProfiles   Int
+  usedProfiles  Int       @default(0)
+  maxMessages   Int
+  usedMessages  Int       @default(0)
+  startedAt     DateTime  @default(now())
+  resetAt       DateTime  @default(now())
+  metadata      Json
+}
+
+model ChatSession {
+  id           String   @id @default(uuid(7))
+  name         String
+  createdAt    DateTime @default(now())
+  messageCount Int      @default(0)
+  profile      Profile  @relation(fields: [profileId], references: [id])
+  profileId    String
+  ownerId      String
+}

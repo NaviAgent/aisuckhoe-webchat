@@ -1,40 +1,55 @@
 {
-  "name": "@naviagent/aisuckhoe-webchat",
-  "version": "1.0.7",
-  "description": "React library to display flowise chatbot on your website",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "name": "aisuckhoe-webchat",
+  "version": "0.1.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "rollup --watch --config rollup.config.js",
-    "build": "rollup --config rollup.config.js",
-    "lint": "eslint --fix \"src/**/*.ts*\""
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma": "prisma",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:studio": "prisma studio"
   },
-  "keywords": [],
-  "license": "MIT",
   "dependencies": {
-    "@ladle/react": "2.5.1"
+    "@auth0/auth0-react": "^2.3.0",
+    "@clerk/nextjs": "^6.12.3",
+    "@next/third-parties": "^15.2.1",
+    "@prisma/client": "^6.5.0",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-slot": "^1.1.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "flowise-embed": "^2.1.2",
+    "flowise-embed-react": "^1.0.7",
+    "lucide-react": "^0.477.0",
+    "next": "^15.1.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "@babel/preset-react": "7.26.3",
-    "@babel/preset-typescript": "7.21.4",
-    "@rollup/plugin-babel": "6.0.3",
-    "@rollup/plugin-node-resolve": "15.0.1",
-    "@rollup/plugin-terser": "0.4.0",
-    "@rollup/plugin-typescript": "11.0.0",
-    "@types/node": "18.15.11",
-    "@types/react": "18.0.32",
-    "eslint": "8.37.0",
-    "flowise-embed": "latest",
-    "react": "19.0.0",
-    "rollup": "3.20.2",
-    "rollup-plugin-typescript-paths": "1.4.0",
-    "tslib": "2.5.0",
-    "tsx": "3.12.6",
-    "typescript": "5.0.3"
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4.0.9",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.5",
+    "prisma": "^6.5.0",
+    "tailwindcss": "^3.4.3",
+    "typescript": "5.7.3"
   },
-  "peerDependencies": {
-    "flowise-embed": "*",
-    "react": "18.x"
+  "engines": {
+    "node": "^18.20.2 || >=20.9.0"
   }
 }

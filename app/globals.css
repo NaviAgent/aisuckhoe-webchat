@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: unset;
+    font-weight: unset;
+  }
+
+  /* 
+    #000000 black
+    #008080 teal
+    159cbc blue green
+    #000000 black
+    16a0cc blue green
+  */
+
+  :root {
+    --font-sarabun: "Sarabun", serif;
+
+    --background: 210 40% 96.1%; /* Soft gray (#edfcfe) */
+    --foreground: 199 65.8% 14.9%; /* Dark gray (#0d2f3f) */
+
+    --card: 210 40% 96.1%; /* Soft gray for cards */
+    --card-foreground: 222.2 84% 4.9%; /* Dark gray for card text */
+
+    --popover: 210 40% 96.1%; /* Soft gray for popovers */
+    --popover-foreground: 222.2 84% 4.9%; /* Dark gray for popover text */
+
+    --primary: 208 100% 50%; /* Primary blue (#1E90FF) */
+    --primary-foreground: 210 40% 98%; /* White (#FFFFFF) for text on primary */
+
+    --secondary: 180 60% 50%; /* Teal light (#00CED1) */
+    --secondary-foreground: 210 40% 98%; /* White (#FFFFFF) for text on secondary */
+
+    --muted: 210 40% 96.1%; /* Soft gray for muted areas */
+    --muted-foreground: 215.4 16.3% 46.9%; /* Lighter gray for muted text */
+
+    --accent: 208 100% 50%; /* Teal light (#139FA3) */
+    --accent-foreground: 210 40% 98%; /* White for text on accent */
+
+    --destructive: 0 84.2% 60.2%; /* Red for destructive actions */
+    --destructive-foreground: 210 40% 98%; /* White for text on destructive */
+
+    --border: 240 6% 80%; /* Light border gray */
+    --input: 214.3 31.8% 91.4%; /* Light input background */
+    --ring: 208 100% 50%; /* Ring color matching primary blue */
+
+    --radius: 0.2rem;
+
+    --success: 196 52% 74%; /* Green for success */
+    --warning: 34 89% 85%; /* Yellow for warnings */
+    --error: 10 100% 86%; /* Red for errors */
+  }
+
+  [data-theme='dark'] {
+    --background: 199 65.8% 14.9%; /* Dark background (#0d2f3f) */
+    --foreground: 187 89.5% 96.3%; /* Light gray (#edfcfe) for text */
+
+    --card: 0 0% 4%; /* Very dark gray for cards */
+    --card-foreground: 210 40% 98%; /* Light gray for card text */
+
+    --popover: 217.2 32.6% 17.5%; /* Dark background for popovers */
+    --popover-foreground: 210 40% 98%; /* Light gray for popover text */
+
+    --primary: 208 100% 60%; /* Lighter blue (#4DA6FF) for dark mode */
+    --primary-foreground: 222.2 47.4% 11.2%; /* Dark gray for text on primary */
+
+    --secondary: 180 40% 30%; /* Darker teal (#1A7F78) */
+    --secondary-foreground: 210 40% 98%; /* White for text on secondary */
+
+    --muted: 217.2 32.6% 17.5%; /* Dark muted background */
+    --muted-foreground: 215 20.2% 65.1%; /* Lighter gray for muted text */
+
+    --accent: 208 100% 60%; /* Darker teal (#5195C9) */
+    --accent-foreground: 210 40% 98%; /* White for text on accent */
+
+    --destructive: 0 62.8% 30.6%; /* Dark red for destructive */
+    --destructive-foreground: 210 40% 98%; /* White for text on destructive */
+
+    --border: 0 0% 15%; /* Dark border */
+    --input: 217.2 32.6% 17.5%; /* Dark input background */
+    --ring: 212.7 26.8% 83.9%; /* Light ring for dark mode */
+
+    --success: 196 100% 14%; /* Dark green for success */
+    --warning: 34 51% 25%; /* Dark yellow for warnings */
+    --error: 10 39% 43%; /* Dark red for errors */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground min-h-[100vh] flex flex-col;
+  }
+  h1, h2, h3 {
+    @apply font-bold;
+  }
+}
+
+html {
+  opacity: 0;
+}
+
+html[data-theme='dark'],
+html[data-theme='light'] {
+  opacity: initial;
+}
