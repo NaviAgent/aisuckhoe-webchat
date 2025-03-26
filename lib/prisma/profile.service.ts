@@ -11,6 +11,7 @@ export async function createProfile(
     data: {
       ...data,
       ownerId: userId!,
+      metadata: data.metadata || {}
     },
   });
 }
@@ -41,7 +42,10 @@ export async function updateProfile(
   const { userId } = await auth();
   return prisma.profile.update({
     where: { id: id, ownerId: userId! },
-    data,
+    data: {
+      ...data,
+      metadata: data.metadata || {}
+    },
   });
 }
 

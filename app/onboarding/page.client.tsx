@@ -25,6 +25,7 @@ export default function OnboardingClient() {
     medicalHistory: '',
     createdAt: new Date(),
     dob: new Date(),
+    metadata: {}
   })
 
   const handleChange = (

@@ -22,12 +22,12 @@ export const completeOnboarding = async (profile: Profile) => {
     })
 
     await prisma.profile.create({
-      data: profile
-    })
+      data: { ...profile, metadata: profile.metadata || {} }
+    });
 
-    return { message: res.publicMetadata }
+    return { message: res.publicMetadata };
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return { error: 'There was an error updating the user metadata.' }
   }
 }
