@@ -1,9 +1,8 @@
 'use client'
-
-import { useAuth, useUser } from '@clerk/nextjs'
+import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { completeOnboarding } from './complete-onboarding'
-import { use, useState } from 'react'
+import { useState } from 'react'
 import { Profile } from '@prisma/client'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -16,13 +15,17 @@ export default function OnboardingClient() {
   const router = useRouter()
 
   const [formData, setFormData] = useState<Profile>({
-    name: user?.fullName || '',
+    name: (user?.fullName ?? '') as string,
+    id: '',
+    avatar: null,
     relationship: 'self',
-    ownerId: user?.id || '',
+    ownerId: user?.id ?? '',
     age: 0,
     gender: '',
-    medicalHistory: ''
-  } as any)
+    medicalHistory: '',
+    createdAt: new Date(),
+    dob: new Date(),
+  })
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement> |
@@ -101,7 +104,7 @@ export default function OnboardingClient() {
                 list="age-options"
               />
               <datalist id="age-options">
-                {Array.from({ length: 100-18 }, (_, i) => i + 18).map(age => (
+                {Array.from({ length: 100 - 18 }, (_, i) => i + 18).map(age => (
                   <option key={age} value={age} />
                 ))}
               </datalist>

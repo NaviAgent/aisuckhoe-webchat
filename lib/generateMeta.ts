@@ -2,7 +2,16 @@ import type { Metadata } from "next";
 import { mergeOpenGraph } from "./mergeOpenGraph";
 import { getServerSideURL } from "./getURL";
 
-const getImageURL = (image?: any) => {
+type ImageType = {
+  url: string;
+  sizes?: {
+    og?: {
+      url?: string;
+    };
+  };
+};
+
+const getImageURL = (image?: ImageType) => {
   const serverUrl = getServerSideURL();
 
   let url = serverUrl + "/website-template-OG.webp";
@@ -19,7 +28,7 @@ const getImageURL = (image?: any) => {
 export const generateMeta = async (args: {
   doc: Partial<{
     slug: string;
-    meta: { image: any ; description: string; [k: string]: any };
+    meta: Partial<{ image: ImageType; description: string; title: string; }>;
   }> | null;
 }): Promise<Metadata> => {
   const { doc } = args;

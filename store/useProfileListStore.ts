@@ -1,13 +1,20 @@
-import { create } from 'zustand';
-import { Profile } from '@prisma/client';
-import { ProfileService } from '@/lib/prisma/profile.service';
+import { create } from "zustand";
+import { Profile } from "@prisma/client";
+import {
+  createProfile,
+  deleteProfile,
+  getAllProfiles,
+  updateProfile,
+} from "@/lib/prisma/profile.service";
 
 interface ProfileListState {
   profiles: Profile[];
   isLoading: boolean;
   error: any;
   fetchProfiles: () => Promise<void>;
-  createProfile: (data: Omit<Profile, "id" | "createdAt" | "updatedAt">) => Promise<void>;
+  createProfile: (
+    data: Omit<Profile, "id" | "createdAt" | "updatedAt">
+  ) => Promise<void>;
   updateProfile: (id: string, data: Partial<Profile>) => Promise<void>;
   deleteProfile: (id: string) => Promise<void>;
 }
@@ -19,7 +26,7 @@ export const useProfileListStore = create<ProfileListState>((set, get) => ({
   fetchProfiles: async () => {
     set({ isLoading: true, error: null });
     try {
-      const profiles = await ProfileService.getAllProfiles();
+      const profiles = await getAllProfiles();
       set({ profiles: profiles, isLoading: false });
     } catch (error) {
       set({ error: error, isLoading: false });
@@ -28,7 +35,7 @@ export const useProfileListStore = create<ProfileListState>((set, get) => ({
   createProfile: async (data) => {
     set({ isLoading: true, error: null });
     try {
-      const newProfile = await ProfileService.createProfile(data);
+      const newProfile = await createProfile(data);
       set({ profiles: [...get().profiles, newProfile], isLoading: false });
     } catch (error) {
       set({ error: error, isLoading: false });
@@ -37,7 +44,7 @@ export const useProfileListStore = create<ProfileListState>((set, get) => ({
   updateProfile: async (id, data) => {
     set({ isLoading: true, error: null });
     try {
-      const updatedProfile = await ProfileService.updateProfile(id, data);
+      const updatedProfile = await updateProfile(id, data);
       set({
         profiles: get().profiles.map((profile) =>
           profile.id === id ? updatedProfile : profile
@@ -51,7 +58,7 @@ export const useProfileListStore = create<ProfileListState>((set, get) => ({
   deleteProfile: async (id) => {
     set({ isLoading: true, error: null });
     try {
-      await ProfileService.deleteProfile(id);
+      await deleteProfile(id);
       set({
         profiles: get().profiles.filter((profile) => profile.id !== id),
         isLoading: false,

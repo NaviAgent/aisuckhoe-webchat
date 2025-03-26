@@ -1,5 +1,3 @@
-// components/ProfileForm.js
-
 import { Profile } from '@prisma/client';
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
@@ -16,7 +14,6 @@ export default function ProfileForm({ profile, open, onClose, onSuccess }: { pro
     medicalHistory: '',
     relationship: ''
   } as Profile);
-  const [isNewProfileOpen, setIsNewProfileOpen] = useState(false); // State for dialog visibility
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -132,7 +129,7 @@ export default function ProfileForm({ profile, open, onClose, onSuccess }: { pro
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsNewProfileOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => onClose()}>Cancel</Button>
             <Button type="submit">Save</Button>
           </DialogFooter>
         </form>

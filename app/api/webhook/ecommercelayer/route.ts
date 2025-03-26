@@ -1,13 +1,9 @@
-import { PrismaClient, Profile } from "@prisma/client";
-import { auth } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
+// import { PrismaClient } from "@prisma/client";
+import { NextRequest } from "next/server";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: NextRequest) {
   const body = await req.json();
   console.log(body);
   // const { userId } = await auth();

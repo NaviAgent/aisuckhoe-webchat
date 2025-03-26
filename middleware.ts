@@ -7,12 +7,18 @@ import { onboardingMiddleware } from './middlewares/onboarding.middleware'
 
 export default function middleware(request: NextRequest, event: NextFetchEvent) {
   // Thứ tự middleware quan trọng
-  return authMiddleware(request, event)
-    .then(() => onboardingMiddleware(request, event))
-    .catch((error) => {
-      console.error('Middleware error:', error)
-      return NextResponse.redirect(new URL('/error', request.url))
-    })
+  const authResult = authMiddleware(request, event);
+  if (authResult instanceof Promise) {
+    return authResult
+      .then(() => onboardingMiddleware(request, event))
+      .catch((error: any) => {
+        console.error('Middleware error:', error);
+        return NextResponse.redirect(new URL('/error', request.url));
+      });
+  } else if (authResult) {
+    return authResult;
+  }
+  return NextResponse.next();
 }
 
 export const config = {

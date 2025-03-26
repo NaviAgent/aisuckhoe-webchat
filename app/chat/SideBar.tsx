@@ -1,5 +1,4 @@
-"use client"
-
+'use client'
 import { useState, useEffect } from "react"
 import {
   Menu,
@@ -7,58 +6,54 @@ import {
   Settings,
   Mic,
   Plus,
-  ChevronDown,
-  VenetianMaskIcon as Masquerade,
-  PlugZap,
   MessageSquare,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { useAuth, UserButton, useUser } from '@clerk/nextjs'
-import ProfileForm from "../../components/Profile/ProfileForm"
+import { UserButton } from '@clerk/nextjs'
+import ProfileForm from "@/components/Profile/ProfileForm"
 import ProfileSelection from "@/components/Profile/ProfileSelection";
-import { ChatSession, Profile } from "@prisma/client"
+import { Profile } from "@prisma/client"
 import Image from "next/image"
+import { useProfileListStore } from "@/store/useProfileListStore"
+import { useProfileStore } from "@/store/useProfileStore"
+import { useChatSessionListStore } from "@/store/useChatSessionListStore"
 
 const defaultProfile: Profile = { id: 'default', name: "Default", avatar: null, gender: 'U', age: 0, dob: new Date(), medicalHistory: null, relationship: 'me', ownerId: '', createdAt: new Date() }
 
 export default function Sidebar() {
+  const { profiles, fetchProfiles } = useProfileListStore()
+  const { profileId, setProfileId } = useProfileStore()
+  const { chatSessions, fetchChatSessions } = useChatSessionListStore()
+
   // State for sidebar collapse
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   // State for profile management
-  const [profiles, setProfiles] = useState<Profile[]>([defaultProfile])
+  // const [profiles, setProfiles] = useState<Profile[]>([defaultProfile])
   const [currentProfile, setCurrentProfile] = useState<Profile>(profiles[0] || defaultProfile)
-
-  // State for chat sessions
-  const [chatSessions, setChatSessions] = useState<ChatSession[]>([])
 
   // State for new profile dialog
   const [isNewProfileOpen, setIsNewProfileOpen] = useState(false)
-  const [newProfileName, setNewProfileName] = useState("")
 
   // Fetch profiles from API
   useEffect(() => {
-    const fetchProfiles = async () => {
-      
-      const response = await fetch('/api/profiles');
-      const data = await response.json();
-      setProfiles(data);
-      setCurrentProfile(data[0] || { id: 0, name: "Default" });
-    };
     fetchProfiles();
-  }, []);
+    fetchChatSessions()
+  }, [fetchProfiles,fetchChatSessions]);
 
-  // Fetch chat sessions from API
   useEffect(() => {
-    const fetchChatSessions = async () => {
-      const response = await fetch('/api/chat-sessions');
-      const data = await response.json();
-      setChatSessions(data);
-    };
-    fetchChatSessions();
-  }, []);
+    if (!profileId && profiles.length > 0) {
+      setProfileId(profiles[0]!.id)
+    }
+  }, [profiles, setProfileId, profileId]);
+
+  useEffect(() => {
+    if (profileId && profiles.length > 0) {
+      setCurrentProfile(profiles.find(p => p.id === profileId)!)
+    }
+  }, [profileId, profiles, setCurrentProfile]);
 
   // Function to toggle sidebar collapse
   const toggleSidebar = () => {
@@ -66,33 +61,33 @@ export default function Sidebar() {
   }
 
   // Function to create a new profile
-  const createNewProfile = async () => {
-    if (newProfileName.trim()) {
-      const newProfile = {
-        name: newProfileName,
-      };
+  // const createNewProfile = async () => {
+  //   if (newProfileName.trim()) {
+  //     const newProfile = {
+  //       name: newProfileName,
+  //     };
 
-      // Send a POST request to create the new profile
-      const response = await fetch('/api/profiles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newProfile),
-      });
+  //     // Send a POST request to create the new profile
+  //     const response = await fetch('/api/profiles', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(newProfile),
+  //     });
 
-      if (response.ok) {
-        const createdProfile = await response.json();
-        setProfiles([...profiles, createdProfile]);
-        setCurrentProfile(createdProfile);
-        setNewProfileName("");
-        setIsNewProfileOpen(false);
-      } else {
-        // Handle error (optional)
-        console.error('Failed to create profile');
-      }
-    }
-  }
+  //     if (response.ok) {
+  //       const createdProfile = await response.json();
+  //       setProfiles([...profiles, createdProfile]);
+  //       setCurrentProfile(createdProfile);
+  //       setNewProfileName("");
+  //       setIsNewProfileOpen(false);
+  //     } else {
+  //       // Handle error (optional)
+  //       console.error('Failed to create profile');
+  //     }
+  //   }
+  // }
 
   // Function to create a new chat session
   // const createNewChat = () => {
@@ -128,7 +123,7 @@ export default function Sidebar() {
 
         {!isCollapsed && (
           <div className="flex-1 ml-2 flex items-center">
-            <Image src="https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png" alt="AI Sức Khỏe Logo" className="h-8 w-8 mr-2" />
+            <Image src="https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png" alt="AI Sức Khỏe Logo" className="h-8 w-8 mr-2" width={100} height={100} />
             <h1 className="font-bold text-lg">Aisuckhoe</h1>
           </div>
         )}

@@ -31,6 +31,8 @@ const Avatar: React.FC<AvatarProps> = ({ src, name, size = "md", className, ...p
           src={src}
           alt="Avatar"
           className="h-full w-full rounded-full object-cover"
+          width={100}
+          height={100}
         />
       ) : name ? (
         <span>{name.charAt(0).toUpperCase()}</span>

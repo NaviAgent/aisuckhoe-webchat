@@ -37,6 +37,7 @@
     "next-env.d.ts",
     "redirects.js",
     "next.config.js",
+    "types/**/*.d.ts"
   ],
   "exclude": ["node_modules"]
 }

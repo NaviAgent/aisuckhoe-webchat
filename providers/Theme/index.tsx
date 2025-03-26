@@ -1,9 +1,6 @@
 'use client'
-
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
-
 import type { Theme, ThemeContextType } from './types'
-
 import canUseDOM from '@/lib/canUseDOM'
 import { defaultTheme, getImplicitPreference, themeLocalStorageKey } from './shared'
 import { themeIsValid } from './types'

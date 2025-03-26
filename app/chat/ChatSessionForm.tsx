@@ -1,5 +1,3 @@
-// components/ChatSessionForm.js
-
 import { ChatSession } from '@prisma/client';
 import { useState } from 'react';
 

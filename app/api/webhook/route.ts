@@ -1,12 +1,10 @@
-// pages/api/profiles/[id].js
-
 import { PrismaClient, Profile } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const { userId } = await auth();
 
   if (!userId) {
