@@ -8,7 +8,6 @@ RUN npm install -g pnpm
 # Build the app
 FROM base as builder
 COPY . .
-COPY .env.example .env
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 RUN pnpm prisma:generate
