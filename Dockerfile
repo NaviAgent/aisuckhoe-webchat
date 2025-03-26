@@ -21,7 +21,7 @@ RUN apk add --no-cache tini
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod
+RUN npm install -g pnpm && pnpm install --frozen-lockfile --prod
 
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
