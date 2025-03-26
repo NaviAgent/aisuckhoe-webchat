@@ -20,7 +20,7 @@ import { useProfileListStore } from "@/store/useProfileListStore"
 import { useProfileStore } from "@/store/useProfileStore"
 import { useChatSessionListStore } from "@/store/useChatSessionListStore"
 
-const defaultProfile: Profile = { id: 'default', name: "Default", avatar: null, gender: 'U', age: 0, dob: new Date(), medicalHistory: null, relationship: 'me', ownerId: '', createdAt: new Date() }
+const defaultProfile: Profile = { id: 'default', name: "Default", avatar: null, gender: 'U', age: 0, dob: new Date(), medicalHistory: null, relationship: 'me', ownerId: '', createdAt: new Date(), metadata: {} }
 
 export default function Sidebar() {
   const { profiles, fetchProfiles } = useProfileListStore()
