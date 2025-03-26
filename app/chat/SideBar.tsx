@@ -19,6 +19,7 @@ import { useAuth, UserButton, useUser } from '@clerk/nextjs'
 import ProfileForm from "../../components/Profile/ProfileForm"
 import ProfileSelection from "@/components/Profile/ProfileSelection";
 import { ChatSession, Profile } from "@prisma/client"
+import Image from "next/image"
 
 const defaultProfile: Profile = { id: 'default', name: "Default", avatar: null, gender: 'U', age: 0, dob: new Date(), medicalHistory: null, relationship: 'me', ownerId: '', createdAt: new Date() }
 
@@ -127,7 +128,7 @@ export default function Sidebar() {
 
         {!isCollapsed && (
           <div className="flex-1 ml-2 flex items-center">
-            <img src="https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png" alt="AI Sức Khỏe Logo" className="h-8 w-8 mr-2" />
+            <Image src="https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png" alt="AI Sức Khỏe Logo" className="h-8 w-8 mr-2" />
             <h1 className="font-bold text-lg">Aisuckhoe</h1>
           </div>
         )}
