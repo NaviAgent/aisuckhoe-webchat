@@ -3,21 +3,20 @@ import React from 'react'
 
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/lib/mergeOpenGraph'
-import { GoogleTagManager } from '@next/third-parties/google'
+// import { GoogleTagManager } from '@next/third-parties/google'
 import {
   ClerkProvider,
 } from '@clerk/nextjs'
 
 import './globals.css'
 import { getServerSideURL } from '@/lib/getURL'
-import appConfig from '@/app/webchat.config'
+import getConfig from 'next/config'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const config = await appConfig
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <GoogleTagManager gtmId={config.gtm.id} />
+        {/* <GoogleTagManager gtmId={config.gtm.id} /> */}
         <head>
           <InitTheme />
           <link href="/favicon.ico" rel="icon" sizes="32x32" />

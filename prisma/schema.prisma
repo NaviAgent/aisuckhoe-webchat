@@ -2,7 +2,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("POSTGRESQL_URL")
 }
 
 generator client {
@@ -21,7 +21,7 @@ model Profile {
   relationship   String
   ownerId        String
   ChatSession    ChatSession[]
-  metadata       Json?         
+  metadata       Json?         @default("{}")
 }
 
 model UserQuota {
@@ -37,7 +37,7 @@ model UserQuota {
   usedMessages  Int       @default(0)
   startedAt     DateTime  @default(now())
   resetAt       DateTime  @default(now())
-  metadata      Json?     
+  metadata      Json?     @default("{}")
 }
 
 model ChatSession {

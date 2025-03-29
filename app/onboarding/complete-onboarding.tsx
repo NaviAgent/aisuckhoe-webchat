@@ -1,9 +1,8 @@
 'use server'
 
+import { createProfile } from '@/lib/prisma/profile.service'
 import { auth, clerkClient } from '@clerk/nextjs/server'
-import { PrismaClient, Profile } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { Profile } from '@prisma/client'
 
 export const completeOnboarding = async (profile: Profile) => {
   const { userId } = await auth()
@@ -21,9 +20,7 @@ export const completeOnboarding = async (profile: Profile) => {
       },
     })
 
-    await prisma.profile.create({
-      data: { ...profile, metadata: profile.metadata || {} }
-    });
+    await createProfile({ ...profile, metadata: profile.metadata || {} })
 
     return { message: res.publicMetadata };
   } catch (err) {

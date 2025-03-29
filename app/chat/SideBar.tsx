@@ -19,6 +19,7 @@ import Image from "next/image"
 import { useProfileListStore } from "@/store/useProfileListStore"
 import { useProfileStore } from "@/store/useProfileStore"
 import { useChatSessionListStore } from "@/store/useChatSessionListStore"
+import { useChatSessionStore } from "@/store/useChatSessionStore"
 
 const defaultProfile: Profile = { id: 'default', name: "Default", avatar: null, gender: 'U', age: 0, dob: new Date(), medicalHistory: null, relationship: 'me', ownerId: '', createdAt: new Date(), metadata: {} }
 
@@ -26,6 +27,7 @@ export default function Sidebar() {
   const { profiles, fetchProfiles } = useProfileListStore()
   const { profileId, setProfileId } = useProfileStore()
   const { chatSessions, fetchChatSessions } = useChatSessionListStore()
+  const { chatSessionId, setChatSessionId } = useChatSessionStore()
 
   // State for sidebar collapse
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -174,29 +176,35 @@ export default function Sidebar() {
       {/* Chat Sessions */}
       <ScrollArea className="flex-1">
         <div className={cn("p-4", isCollapsed ? "flex flex-col items-center" : "")}>
-          {!isCollapsed && <h2 className="text-sm font-medium mb-2">Chat History</h2>}
+          {!isCollapsed && <h2 className="text-sm font-bold mb-2">Chat History</h2>}
 
-          <div className="space-y-2">
-            {chatSessions.map((chat) => (
-              <div
-                key={chat.id}
-                className={cn(
-                  "border border-border rounded-md p-3 cursor-pointer hover:bg-muted/50",
-                  isCollapsed ? "flex justify-center p-2" : "",
-                )}
-              >
-                {isCollapsed ? (
-                  <MessageSquare className="h-5 w-5" />
-                ) : (
-                  <>
-                    <div className="font-medium text-sm truncate">{chat.name}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {chat.messageCount} messages · {chat.createdAt.toLocaleString()}
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
+          <div className="">
+            {chatSessions.map((chat) => {
+              const isSelected = chatSessionId === chat.id;
+              return (
+                <div
+                  key={chat.id}
+                  className={cn(
+                    "rounded-md p-3 cursor-pointer hover:bg-muted/90",
+                    isCollapsed ? "flex justify-center p-2" : "",
+                    isSelected ? "scale-105 bg-muted/90" : "scale-100 bg-inherit text-inherit",
+                    "transition-transform duration-200 ease-in-out"
+                  )}
+                  onClick={(e) => setChatSessionId(chat.id)}
+                >
+                  {isCollapsed ? (
+                    <MessageSquare className="h-5 w-5" />
+                  ) : (
+                    <>
+                      <div className="font-medium text-sm truncate">{chat.name}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {chat.messageCount} messages · {chat.createdAt.toLocaleString()}
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </ScrollArea>
@@ -222,7 +230,7 @@ export default function Sidebar() {
         </UserButton>
       </div>
 
-      <div
+      {/* <div
         className={cn(
           "p-4 border-t border-border",
           isCollapsed ? "flex flex-col items-center space-y-2" : "grid grid-cols-4 gap-2",
@@ -254,7 +262,7 @@ export default function Sidebar() {
             </Button>
           </>
         )}
-      </div>
+      </div> */}
 
       {/* New Profile Dialog */}
       <ProfileForm profile={undefined} open={isNewProfileOpen} onClose={() => setIsNewProfileOpen(false)} onSuccess={() => { }} />

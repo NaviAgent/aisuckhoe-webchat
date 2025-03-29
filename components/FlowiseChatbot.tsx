@@ -1,28 +1,32 @@
 'use client'
-import { useEffect, useRef } from 'react'
-import type { BubbleProps } from 'flowise-embed'
+import { useEffect, useRef, useState } from 'react'
+import type { BubbleProps } from '@ivannguyendev/flowise-embed'
+import Loading from './ui/loading'
 
 type Props = BubbleProps & {
     style?: React.CSSProperties
-    className?: string
+    className?: string,
 }
 
 type FullPageChatElement = HTMLElement & Props
 
 export const FlowiseChatbot = ({ style, className, ...assignableProps }: Props) => {
     const ref = useRef<FullPageChatElement | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         ; (async () => {
-            await import('flowise-embed/dist/web.js')
+            setIsLoading(true)
+            await import('@ivannguyendev/flowise-embed/dist/web.js')
+            setIsLoading(false)
         })()
     }, [])
 
     useEffect(() => {
         if (!ref.current) return
         Object.assign(ref.current, assignableProps)
-    }, [assignableProps])
+    }, [assignableProps, isLoading])
 
     // @ts-expect-error - Ignore type checking for flowise-fullchatbot
-    return <flowise-fullchatbot ref={ref} style={style} class={className} />
+    return isLoading ? <Loading /> : <flowise-fullchatbot ref={ref} style={style} class={className} />
 }

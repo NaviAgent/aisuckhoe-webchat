@@ -58,4 +58,4 @@ COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./next.config.js
 USER nextjs
 EXPOSE 3000
 ENV PORT 3000
-CMD HOSTNAME="0.0.0.0" node server.js
+CMD HOSTNAME="0.0.0.0" node scripts/updateFirestoreRules.ts && node server.js

@@ -25,7 +25,7 @@
   :root {
     --font-sarabun: "Sarabun", serif;
 
-    --background: 210 40% 96.1%; /* Soft gray (#edfcfe) */
+    --background: 0 0% 100%; /* Soft gray (#edfcfe) */
     --foreground: 199 65.8% 14.9%; /* Dark gray (#0d2f3f) */
 
     --card: 210 40% 96.1%; /* Soft gray for cards */
