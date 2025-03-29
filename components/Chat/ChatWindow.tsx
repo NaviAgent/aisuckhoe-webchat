@@ -1,9 +1,9 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FlowiseChatbot } from '@/components/FlowiseChatbot';
-import useChatStore from '@/store/useChatStore';
 import { StorageAdapter } from '@ivannguyendev/flowise-embed/dist/utils/storage/storageAdapter';
 import { useFirebase } from '@/store/useFirebase';
+import useChatHistoryStore from '@/store/useChatHistoryStore';
 
 const welcomeMessage = `Xin chào! 😊
 Tôi là Aisuckhoe, trợ lý sức khỏe AI của bạn. Tôi luôn sẵn sàng cung cấp thông tin y tế đáng tin cậy, dựa trên các nguồn uy tín.
@@ -22,7 +22,7 @@ interface ChatWindowProps {
 
 export default function ChatWindow({ chatId }: ChatWindowProps) {
   const { user: firebaseUser } = useFirebase()
-  const { messages, sendMessage } = useChatStore();
+  const { chatHistory, saveChatHistory } = useChatHistoryStore();
 
   const logoURL = `https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png?${Math.floor(Date.now() / 100000)}`;
   const chatflowid = "be686718-e28e-4fad-af47-f53d3a73d5b4";
@@ -35,22 +35,14 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
 
   const storageAdapter: StorageAdapter = {
     async getMessages(chatflowid, chatId) {
-      console.log(chatId, messages)
-      return { chatHistory: messages, chatId, lead: null }
+      return { chatHistory: chatHistory, chatId, lead: null }
     },
     async removeMessages(chatflowid, chatId) {
       console.log('removeMessages', chatId)
     },
-    async saveMessages(chatflowid, { chatId, chatHistory }) {
+    async saveMessages(chatflowid, { chatId, chatHistory, lead }) {
       if (!chatHistory) return
-      const newMessage = chatHistory?.[chatHistory?.length - 1]
-      if (chatHistory.length > messages.length && newMessage) {
-        sendMessage(chatId!, firebaseUser?.uid!, newMessage)
-      }
-      else if (newMessage) {
-
-      }
-      console.log('saveMessages', chatflowid, newMessage)
+      saveChatHistory(chatId!, { chatHistory, lead })
     },
   }
 

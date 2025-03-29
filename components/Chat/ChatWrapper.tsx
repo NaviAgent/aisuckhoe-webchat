@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import useChatStore from '@/store/useChatStore';
+import useChatStore from '@/store/useChatHistoryStore';
 import { useFirebase } from '@/store/useFirebase';
 import Loading from '../ui/loading';
 import ChatWindow from './ChatWindow';
@@ -11,7 +11,7 @@ interface ChatWrapperProps {
 
 export default function ChatWrapper({ chatId }: ChatWrapperProps) {
   const { user: firebaseUser, signInFirebase } = useFirebase()
-  const { isLoading, fetchChatHistory } = useChatStore();
+  const { isLoading, fetchChatHistories } = useChatStore();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function ChatWrapper({ chatId }: ChatWrapperProps) {
   }, [firebaseUser]);
 
   useEffect(() => {
-    fetchChatHistory(chatId);
+    fetchChatHistories(chatId);
   }, [chatId]);
 
   return (
