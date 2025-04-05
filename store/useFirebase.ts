@@ -13,6 +13,13 @@ export const useFirebase = create<FirebaseState>((set, get) => ({
   setUser: (user) => set({ user }),
   signInFirebase: async () => {
     const user = await signInFirebase();
-    set({ user });
+
+    set((preUser) => {
+      if (preUser.user?.uid === user.uid) {
+        return preUser;
+      } else {
+        return { user };
+      }
+    });
   },
 }));

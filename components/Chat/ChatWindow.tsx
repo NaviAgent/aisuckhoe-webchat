@@ -1,9 +1,9 @@
-'use client';
-import React from 'react';
-import FlowiseChatbot from '@/components/FlowiseChatbot';
-import { StorageAdapter } from '@ivannguyendev/flowise-embed/dist/utils/storage/storageAdapter';
-import { useFirebase } from '@/store/useFirebase';
-import useChatHistoryStore from '@/store/useChatHistoryStore';
+"use client";
+
+import React from "react";
+import FlowiseChatbot from "@/components/FlowiseChatbot";
+import { StorageAdapter } from "@ivannguyendev/flowise-embed/dist/utils/storage/storageAdapter";
+import Flowise from "@/types/flowise";
 
 const welcomeMessage = `Xin chào! 😊
 Tôi là Aisuckhoe, trợ lý sức khỏe AI của bạn. Tôi luôn sẵn sàng cung cấp thông tin y tế đáng tin cậy, dựa trên các nguồn uy tín.
@@ -18,78 +18,96 @@ span.chatbot-host-bubble[data-testid="host-bubble"] {
 
 interface ChatWindowProps {
   chatId: string;
+  chatHistory: Record<
+    string,
+    { dateTime: Date; message: string; messageId: string; type: string }
+  >[];
+  saveChatHistory: (
+    chatId: string,
+    historyData: {
+      lead: Flowise.Lead;
+      chatHistory: Record<
+        string,
+        { dateTime: Date; message: string; messageId: string; type: string }
+      >[];
+    }
+  ) => Promise<void>;
 }
 
-export default function ChatWindow({ chatId }: ChatWindowProps) {
-  const { user: firebaseUser } = useFirebase()
-  const { chatHistory, saveChatHistory } = useChatHistoryStore();
-
+const ChatWindow = ({
+  chatId,
+  chatHistory,
+  saveChatHistory,
+}: ChatWindowProps) => {
+  console.log("[ChatWindow] init", chatId);
   const logoURL = `https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png?${Math.floor(Date.now() / 100000)}`;
   const chatflowid = "be686718-e28e-4fad-af47-f53d3a73d5b4";
   const apiHost = "https://flowise.aisuckhoe.com";
   const chatflowConfig = {
     /* Chatflow Config */
-    sessionId: '5d707fb5-b027-48dc-9596-acce11f5c066',
+    sessionId: "5d707fb5-b027-48dc-9596-acce11f5c066",
     // customerId
   };
 
   const storageAdapter: StorageAdapter = {
     async getMessages(chatflowid, chatId) {
-      return { chatHistory: chatHistory, chatId, lead: null }
+      return { chatHistory, chatId, lead: null };
     },
     async removeMessages(chatflowid, chatId) {
-      console.log('removeMessages', chatId)
+      console.log("removeMessages", chatId);
     },
     async saveMessages(chatflowid, { chatId, chatHistory, lead }) {
-      if (!chatHistory) return
-      saveChatHistory(chatId!, { chatHistory, lead })
+      if (!chatHistory) return;
+      saveChatHistory(chatId!, { chatHistory, lead });
     },
-  }
+  };
 
   const theme = {
     button: {
-      backgroundColor: '#3B81F6',
+      backgroundColor: "#3B81F6",
       right: 20,
       bottom: 20,
       size: 48,
       dragAndDrop: true,
-      iconColor: 'white',
-      customIconSrc: 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/google-messages.svg',
+      iconColor: "white",
+      customIconSrc:
+        "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/google-messages.svg",
       autoWindowOpen: {
         autoOpen: true,
         openDelay: 2,
-        autoOpenOnMobile: false
-      }
+        autoOpenOnMobile: false,
+      },
     },
     tooltip: {
       showTooltip: true,
-      tooltipMessage: 'Hi There 👋!',
-      tooltipBackgroundColor: 'black',
-      tooltipTextColor: 'white',
-      tooltipFontSize: 16
+      tooltipMessage: "Hi There 👋!",
+      tooltipBackgroundColor: "black",
+      tooltipTextColor: "white",
+      tooltipFontSize: 16,
     },
     disclaimer: {
-      title: 'Disclaimer',
-      message: 'By using this chatbot, you agree to the <a target="_blank" href="https://aisuckhoe.com/terms">Terms & Condition</a>',
-      textColor: 'black',
-      buttonColor: '#3b82f6',
-      buttonText: 'Bắt đầu',
-      buttonTextColor: 'white',
-      blurredBackgroundColor: 'rgba(0, 0, 0, 0.4)', //The color of the blurred background that overlays the chat interface
-      backgroundColor: 'white',
-      denyButtonText: 'Cancel',
-      denyButtonBgColor: '#ef4444',
+      title: "Disclaimer",
+      message:
+        'By using this chatbot, you agree to the <a target="_blank" href="https://aisuckhoe.com/terms">Terms & Condition</a>',
+      textColor: "black",
+      buttonColor: "#3b82f6",
+      buttonText: "Bắt đầu",
+      buttonTextColor: "white",
+      blurredBackgroundColor: "rgba(0, 0, 0, 0.4)", //The color of the blurred background that overlays the chat interface
+      backgroundColor: "white",
+      denyButtonText: "Cancel",
+      denyButtonBgColor: "#ef4444",
     },
     customCSS: customCSS,
     chatWindow: {
       showTitle: false,
       showAgentMessages: true,
-      title: 'Aisuckhoe',
+      title: "Aisuckhoe",
       // titleAvatarSrc: logoURL,
       welcomeMessage: welcomeMessage,
-      errorMessage: 'This is a custom error message',
-      backgroundColor: '#ffffff',
-      backgroundImage: 'enter image path or link',
+      errorMessage: "This is a custom error message",
+      backgroundColor: "#ffffff",
+      backgroundImage: "enter image path or link",
       // height: '100%',
       // width: '100%',
       fontSize: 16,
@@ -99,27 +117,29 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
       // ],
       starterPromptFontSize: 15,
       clearChatOnReload: false,
-      sourceDocsTitle: 'Sources:',
+      sourceDocsTitle: "Sources:",
       renderHTML: true,
       botMessage: {
-        backgroundColor: '#f7f8ff',
-        textColor: '#303235',
+        backgroundColor: "#f7f8ff",
+        textColor: "#303235",
         showAvatar: true,
         avatarSrc: logoURL,
       },
       userMessage: {
-        backgroundColor: '#3B81F6',
-        textColor: '#ffffff',
+        backgroundColor: "#3B81F6",
+        textColor: "#ffffff",
         showAvatar: false,
-        avatarSrc: 'https://raw.githubusercontent.com/zahidkhawaja/langchain-chat-nextjs/main/public/usericon.png',
+        avatarSrc:
+          "https://raw.githubusercontent.com/zahidkhawaja/langchain-chat-nextjs/main/public/usericon.png",
       },
       textInput: {
-        placeholder: 'Type your question',
-        backgroundColor: '#ffffff',
-        textColor: '#303235',
-        sendButtonColor: '#3B81F6',
+        placeholder: "Type your question",
+        backgroundColor: "#ffffff",
+        textColor: "#303235",
+        sendButtonColor: "#3B81F6",
         maxChars: 500,
-        maxCharsWarningMessage: 'You exceeded the characters limit. Please input less than 500 characters.',
+        maxCharsWarningMessage:
+          "You exceeded the characters limit. Please input less than 500 characters.",
         autoFocus: true, // If not used, autofocus is disabled on mobile and enabled on desktop. true enables it on both, false disables it on both.
         sendMessageSound: true,
         // sendSoundLocation: "send_message.mp3", // If this is not used, the default sound effect will be played if sendSoundMessage is true.
@@ -127,39 +147,20 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
         // receiveSoundLocation: "receive_message.mp3", // If this is not used, the default sound effect will be played if receiveSoundMessage is true.
       },
       feedback: {
-        color: '#303235'
+        color: "#303235",
       },
       dateTimeToggle: {
         date: true,
-        time: true
+        time: true,
       },
       footer: {
-        textColor: '#303235',
-        text: 'Powered by',
-        company: 'Aisuckhoe',
-        companyLink: 'https://aisuckhoe.com',
+        textColor: "#303235",
+        text: "Powered by",
+        company: "Aisuckhoe",
+        companyLink: "https://aisuckhoe.com",
       },
-    }
-  }
-
-  // useEffect(() => {
-  //   if (!firebaseUser) {
-  //     signInFirebase()
-  //   }
-  // }, [firebaseUser]);
-
-  // useEffect(() => {
-  //   // if (firebaseUser) {
-  //   if (firebaseUser) {
-  //     console.log(chatId)
-  //     fetchChatHistory();
-  //     // const unsubscribe = subscribeToMessages();
-  //     // return () => {
-  //     //   unsubscribe();
-  //     // };
-  //   }
-  //   // }
-  // }, [chatId, firebaseUser]);
+    },
+  };
 
   return (
     <FlowiseChatbot
@@ -172,4 +173,6 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
       storageAdapter={storageAdapter}
     />
   );
-}
+};
+
+export default React.memo(ChatWindow);

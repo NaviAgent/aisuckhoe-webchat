@@ -7,7 +7,7 @@ import { HomeMain } from "@/components/Home/HomeMain";
 export default function ChatClientPage() {
   return (
     <div className="flex flex-row h-screen bg-background">
-      <div className="flex">
+      <div className="hidden md:flex">
         <ChatSideBar />
       </div>
 

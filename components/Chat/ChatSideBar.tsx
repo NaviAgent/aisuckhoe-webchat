@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -13,8 +13,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-
-import { Menu, X, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { cn, groupByTimePeriods } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserButton } from "@clerk/nextjs";
@@ -24,18 +23,15 @@ import { useChatSessionListStore } from "@/store/useChatSessionListStore";
 import { useChatSessionStore } from "@/store/useChatSessionStore";
 import { ProfileHeader } from "@/components/Profile/ProfileHeader";
 import { ChatSession } from "@prisma/client";
-
 import React from "react";
 import { useSidebarStore } from "@/store/useSidebarStore";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const ChatSidebar = () => {
   const { profiles, fetchProfiles } = useProfileListStore();
   const { profileId, setProfileId } = useProfileStore();
   const { chatSessions, fetchChatSessions } = useChatSessionListStore();
-  const { chatSessionId, setChatSessionId } = useChatSessionStore();
-  const { collapsible, setCollapsible } = useSidebarStore();
-  const isMobile = useIsMobile();
+  const { chatSessionId } = useChatSessionStore();
+  const { collapsible } = useSidebarStore();
 
   // Fetch profiles from API
   useEffect(() => {

@@ -18,13 +18,13 @@ const ChatHistoryList = ({
   const [searchQuery, setSearchQuery] = useState("");
 
   const groupChat = () => {
-    const groups = groupByTimePeriods(chatSessions);
+    const groups = groupByTimePeriods<ChatSession>(chatSessions);
     return Object.entries(groups)
       .map(([key, chats]) => ({ key, chats }))
       .filter(({ chats }) => chats.length > 0);
   };
 
-  const searchChat = (chats: groupByTimePeriodsType[]) => {
+  const searchChat = (chats: groupByTimePeriodsType<ChatSession>[]) => {
     const textSearch = searchQuery.toLowerCase();
     return chats.filter((chat) => chat.name.toLowerCase().includes(textSearch));
   };

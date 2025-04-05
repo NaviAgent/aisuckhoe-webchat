@@ -5,9 +5,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export type groupByTimePeriodsType = { createdAt: Date; [k: string]: any };
+export type groupByTimePeriodsType<T = unknown> = { createdAt: Date } & T;
 
-export function groupByTimePeriods(data: groupByTimePeriodsType[]) {
+export function groupByTimePeriods<T = unknown>(data: groupByTimePeriodsType<T>[]) {
   // Lấy thời gian hiện tại theo local timezone của device
   const todayLocal = new Date();
   // Chuẩn hóa về đầu ngày theo local timezone của device
@@ -15,15 +15,15 @@ export function groupByTimePeriods(data: groupByTimePeriodsType[]) {
   today.setHours(0, 0, 0, 0);
 
   const groups: {
-    Today: groupByTimePeriodsType[];
-    Yesterday: groupByTimePeriodsType[];
-    "Last 7 days": groupByTimePeriodsType[];
-    "Last 30 days": groupByTimePeriodsType[];
-    "Last 6 months": groupByTimePeriodsType[];
-    "Last 1 year": groupByTimePeriodsType[];
-    "Last 2 years": groupByTimePeriodsType[];
-    "Last 3 years": groupByTimePeriodsType[];
-    Older: groupByTimePeriodsType[];
+    Today: groupByTimePeriodsType<T>[];
+    Yesterday: groupByTimePeriodsType<T>[];
+    "Last 7 days": groupByTimePeriodsType<T>[];
+    "Last 30 days": groupByTimePeriodsType<T>[];
+    "Last 6 months": groupByTimePeriodsType<T>[];
+    "Last 1 year": groupByTimePeriodsType<T>[];
+    "Last 2 years": groupByTimePeriodsType<T>[];
+    "Last 3 years": groupByTimePeriodsType<T>[];
+    Older: groupByTimePeriodsType<T>[];
   } = {
     Today: [],
     Yesterday: [],

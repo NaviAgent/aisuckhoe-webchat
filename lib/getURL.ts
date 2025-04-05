@@ -2,10 +2,10 @@ import canUseDOM from "./canUseDOM";
 import { clientEnv } from "./env";
 
 export const getServerSideURL = () => {
-  let url = clientEnv.app.serverUrl;
+  let url = clientEnv?.NEXT_PUBLIC_SERVER_URL;
 
-  if (!url && clientEnv.vercel.projectProductionUrl) {
-    return `https://${clientEnv.vercel.projectProductionUrl}`;
+  if (!url && clientEnv?.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${clientEnv.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;
   }
 
   if (!url) {
@@ -24,9 +24,9 @@ export const getClientSideURL = () => {
     return `${protocol}//${domain}${port ? `:${port}` : ""}`;
   }
 
-  if (clientEnv.vercel.projectProductionUrl) {
-    return `https://${clientEnv.vercel.projectProductionUrl}`;
+  if (clientEnv?.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${clientEnv.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;
   }
 
-  return clientEnv.app.serverUrl || "";
+  return clientEnv?.NEXT_PUBLIC_SERVER_URL || "";
 };

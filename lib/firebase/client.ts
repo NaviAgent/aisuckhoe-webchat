@@ -13,8 +13,10 @@ export const db = getFirestore(firebaseApp);
 
 export async function signInFirebase() {
   const auth = getAuth(firebaseApp);
+  if (auth.currentUser) return auth.currentUser;
+  
   const customToken = await createFirebaseToken(); // Gọi API server
-  const account =  await signInWithCustomToken(auth, customToken);
-  console.log('[signInFirebase]', account)
-  return account.user
+  const account = await signInWithCustomToken(auth, customToken);
+  console.log("[signInFirebase]", account);
+  return account.user;
 }

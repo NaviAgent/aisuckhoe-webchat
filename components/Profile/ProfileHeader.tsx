@@ -1,7 +1,7 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { Check, Settings } from "lucide-react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,55 +27,8 @@ import { Profile } from "@prisma/client";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Example profiles
-// const profiles: Profile[] = [
-//   {
-//     id: '1',
-//     name: "ivannguyendev",
-//     age: 1,
-//     gender: 'M',
-//     relationship: '',
-//     avatar: "from-blue-400 to-purple-400",
-//     dob: new Date(),
-//     createdAt: new Date(),
-//     medicalHistory: '',
-//     metadata: {},
-//     ownerId: '1'
-//   },
-//   {
-//     id: '2',
-//     name: "sarahsmith",
-//     age: 1,
-//     gender: 'M',
-//     relationship: '',
-//     avatar: "from-green-400 to-teal-400",
-//     dob: new Date(),
-//     createdAt: new Date(),
-//     medicalHistory: '',
-//     metadata: {},
-//     ownerId: '1'
-//   },
-//   {
-//     id: '3',
-//     name: "alexjohnson",
-//     age: 1,
-//     gender: 'M',
-//     relationship: '',
-//     avatar: "from-orange-400 to-red-400",
-//     dob: new Date(),
-//     createdAt: new Date(),
-//     medicalHistory: '',
-//     metadata: {},
-//     ownerId: '1'
-//   },
-// ]
-
 interface HeaderProfileProps {
   profiles: Profile[];
-  // currentProfile: Profile;
-  // setCurrentProfile: (profile: Profile) => void;
-  // isCollapsed: boolean;
-  // openProfileForm: () => void;
 }
 
 export function ProfileHeader({ profiles }: HeaderProfileProps) {
@@ -116,7 +69,7 @@ export function ProfileHeader({ profiles }: HeaderProfileProps) {
                 {selectedProfile?.name[0]}
               </AvatarFallback>
             </Avatar>
-            
+
             {!isMobile ? (
               <div className="ml-3 text-left">
                 <p className="text-sm font-medium">{selectedProfile?.name}</p>
@@ -182,8 +135,7 @@ export function ProfileHeader({ profiles }: HeaderProfileProps) {
                 <DialogHeader>
                   <DialogTitle>Edit Profile</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you're
-                    done.
+                    Make changes to your profile here
                   </DialogDescription>
                 </DialogHeader>
                 <Tabs defaultValue="profile" className="w-full">

@@ -1,17 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  BarChart3,
-  Code2,
-  ImagePlus,
-  Paperclip,
-  Search,
-  Send,
-  Sparkles,
-  ChevronDown,
-} from "lucide-react";
+import { Paperclip, Send, ChevronDown } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useProfileListStore } from "@/store/useProfileListStore";
@@ -55,7 +45,7 @@ export function HomeMain() {
               <Paperclip className="h-5 w-5 text-muted-foreground" />
             </Button>
           </div>
-          
+
           <div className="absolute inset-y-0 right-3 flex items-end space-x-1">
             <Button
               variant="ghost"
