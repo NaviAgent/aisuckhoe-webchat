@@ -7,6 +7,9 @@ export async function createProfile(
   data: Omit<Profile, "id" | "createdAt" | "updatedAt">
 ): Promise<Profile> {
   const { userId } = await auth();
+  if (!userId) {
+    throw new Error("You must be signed in to create profiles");
+  }
   return prisma.profile.create({
     data: {
       ...data,
@@ -18,6 +21,9 @@ export async function createProfile(
 
 export async function getProfileById(id: string): Promise<Profile | null> {
   const { userId } = await auth();
+  if (!userId) {
+    throw new Error("You must be signed in to get profiles");
+  }
   return prisma.profile.findUnique({
     where: {
       id: id,
@@ -28,6 +34,9 @@ export async function getProfileById(id: string): Promise<Profile | null> {
 
 export async function getAllProfiles(): Promise<Profile[]> {
   const { userId } = await auth();
+  if (!userId) {
+    throw new Error("You must be signed in to get profiles");
+  }
   return prisma.profile.findMany({
     where: {
       ownerId: userId!,
@@ -40,6 +49,9 @@ export async function updateProfile(
   data: Partial<Profile>
 ): Promise<Profile> {
   const { userId } = await auth();
+  if (!userId) {
+    throw new Error("You must be signed in to update profiles");
+  }
   return prisma.profile.update({
     where: { id: id, ownerId: userId! },
     data: {
@@ -51,6 +63,9 @@ export async function updateProfile(
 
 export async function deleteProfile(id: string): Promise<Profile> {
   const { userId } = await auth();
+  if (!userId) {
+    throw new Error("You must be signed in to delete");
+  }
   return prisma.profile.delete({
     where: { id: id, ownerId: userId! },
   });

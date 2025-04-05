@@ -1,9 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
-import HomeClientPage from "./page.client";
+import ChatIdClientPage from "./page.client";
 
-export default async function HomePage() {
+export default async function ChatIdPage() {
   const { userId, redirectToSignIn } = await auth();
   if (!userId) return redirectToSignIn();
 
-  return <HomeClientPage></HomeClientPage>
+  return <ChatIdClientPage></ChatIdClientPage>;
 }

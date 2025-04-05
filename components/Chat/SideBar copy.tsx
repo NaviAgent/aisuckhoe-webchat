@@ -20,6 +20,7 @@ import { useProfileListStore } from "@/store/useProfileListStore"
 import { useProfileStore } from "@/store/useProfileStore"
 import { useChatSessionListStore } from "@/store/useChatSessionListStore"
 import { useChatSessionStore } from "@/store/useChatSessionStore"
+import { HeaderProfile } from "@/components/Profile/ProfileHeader"
 
 const defaultProfile: Profile = { id: 'default', name: "Default", avatar: null, gender: 'U', age: 0, dob: new Date(), medicalHistory: null, relationship: 'me', ownerId: '', createdAt: new Date(), metadata: {} }
 
@@ -34,7 +35,7 @@ export default function Sidebar() {
 
   // State for profile management
   // const [profiles, setProfiles] = useState<Profile[]>([defaultProfile])
-  const [currentProfile, setCurrentProfile] = useState<Profile>(profiles[0] || defaultProfile)
+  // const [currentProfile, setCurrentProfile] = useState<Profile>(profiles[0] || defaultProfile)
 
   // State for new profile dialog
   const [isNewProfileOpen, setIsNewProfileOpen] = useState(false)
@@ -51,11 +52,11 @@ export default function Sidebar() {
     }
   }, [profiles, setProfileId, profileId]);
 
-  useEffect(() => {
-    if (profileId && profiles.length > 0) {
-      setCurrentProfile(profiles.find(p => p.id === profileId)!)
-    }
-  }, [profileId, profiles, setCurrentProfile]);
+  // useEffect(() => {
+  //   if (profileId && profiles.length > 0) {
+  //     setCurrentProfile(profiles.find(p => p.id === profileId)!)
+  //   }
+  // }, [profileId, profiles, setCurrentProfile]);
 
   // Function to toggle sidebar collapse
   const toggleSidebar = () => {
@@ -125,8 +126,9 @@ export default function Sidebar() {
 
         {!isCollapsed && (
           <div className="flex-1 ml-2 flex items-center">
-            <Image src="https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png" alt="AI Sức Khỏe Logo" className="h-8 w-8 mr-2" width={100} height={100} />
-            <h1 className="font-bold text-lg">Aisuckhoe</h1>
+            <HeaderProfile profiles={profiles}/>
+            {/* <Image src="https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png" alt="AI Sức Khỏe Logo" className="h-8 w-8 mr-2" width={100} height={100} />
+            <h1 className="font-bold text-lg">Aisuckhoe</h1> */}
           </div>
         )}
 
@@ -140,13 +142,13 @@ export default function Sidebar() {
       </div>
 
       {/* Profile Selection */}
-      <ProfileSelection
+      {/* <ProfileSelection
         profiles={profiles}
         currentProfile={currentProfile}
         setCurrentProfile={setCurrentProfile}
         isCollapsed={isCollapsed}
         openProfileForm={openProfileForm}
-      />
+      /> */}
 
       {/* Function Buttons */}
       <div className={cn("p-4 border-b border-border", isCollapsed ? "flex flex-col items-center" : "")}>

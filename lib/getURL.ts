@@ -1,14 +1,11 @@
-import getConfig from "next/config";
 import canUseDOM from "./canUseDOM";
-
-const { publicRuntimeConfig } = await getConfig()
-
+import { clientEnv } from "./env";
 
 export const getServerSideURL = () => {
-  let url = publicRuntimeConfig.app.serverUrl;
+  let url = clientEnv.app.serverUrl;
 
-  if (!url && publicRuntimeConfig.vercel.projectProductionUrl) {
-    return `https://${publicRuntimeConfig.vercel.projectProductionUrl}`;
+  if (!url && clientEnv.vercel.projectProductionUrl) {
+    return `https://${clientEnv.vercel.projectProductionUrl}`;
   }
 
   if (!url) {
@@ -27,9 +24,9 @@ export const getClientSideURL = () => {
     return `${protocol}//${domain}${port ? `:${port}` : ""}`;
   }
 
-  if (publicRuntimeConfig.vercel.projectProductionUrl) {
-    return `https://${publicRuntimeConfig.vercel.projectProductionUrl}`;
+  if (clientEnv.vercel.projectProductionUrl) {
+    return `https://${clientEnv.vercel.projectProductionUrl}`;
   }
 
-  return publicRuntimeConfig.app.serverUrl || "";
+  return clientEnv.app.serverUrl || "";
 };

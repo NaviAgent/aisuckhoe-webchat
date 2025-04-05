@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { FlowiseChatbot } from '@/components/FlowiseChatbot';
+import FlowiseChatbot from '@/components/FlowiseChatbot';
 import { StorageAdapter } from '@ivannguyendev/flowise-embed/dist/utils/storage/storageAdapter';
 import { useFirebase } from '@/store/useFirebase';
 import useChatHistoryStore from '@/store/useChatHistoryStore';
@@ -110,7 +110,7 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
       userMessage: {
         backgroundColor: '#3B81F6',
         textColor: '#ffffff',
-        showAvatar: true,
+        showAvatar: false,
         avatarSrc: 'https://raw.githubusercontent.com/zahidkhawaja/langchain-chat-nextjs/main/public/usericon.png',
       },
       textInput: {
@@ -171,6 +171,5 @@ export default function ChatWindow({ chatId }: ChatWindowProps) {
       chatId={chatId}
       storageAdapter={storageAdapter}
     />
-
   );
 }
