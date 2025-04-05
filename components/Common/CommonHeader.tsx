@@ -3,9 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Menu, PlusCircle, X } from "lucide-react";
 import { ChatHistorySheet } from "@/components/ChatHistory/ChatHistory";
-import { ProfileHeader } from "../Profile/ProfileHeader";
-import { useProfileListStore } from "@/store/useProfileListStore";
-import { useEffect } from "react";
+import ProfileHeader from "../Profile/ProfileHeader";
 import Link from "next/link";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -16,14 +14,8 @@ interface CommonHeaderProps {
 }
 
 export function CommonHeader({ className }: CommonHeaderProps) {
-  const { profiles, fetchProfiles } = useProfileListStore();
   const { collapsible, setCollapsible } = useSidebarStore();
   const isMobile = useIsMobile();
-
-  // Fetch profiles from API
-  useEffect(() => {
-    fetchProfiles();
-  }, [fetchProfiles]);
 
   return (
     <>
@@ -61,7 +53,7 @@ export function CommonHeader({ className }: CommonHeaderProps) {
           <Ghost className="h-5 w-5" />
           <span className="sr-only">AI Assistant</span>
         </Button> */}
-          <ProfileHeader profiles={profiles} />
+          <ProfileHeader />
         </div>
       </div>
     </>

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import type { BubbleProps } from "@ivannguyendev/flowise-embed";
 import Loading from "./ui/loading";
@@ -20,15 +21,21 @@ const FlowiseChatbot = ({ style, className, ...assignableProps }: Props) => {
       await import("@ivannguyendev/flowise-embed/dist/web.js");
       setIsLoading(false);
     })();
-  }, []);
+  });
 
   useEffect(() => {
     if (!ref.current) return;
     Object.assign(ref.current, assignableProps);
   }, [assignableProps, isLoading]);
 
-  // @ts-expect-error - Ignore type checking for flowise-fullchatbot
-  return isLoading ? ( <Loading /> ) : ( <flowise-fullchatbot ref={ref} style={style} class={className} /> );
+  return isLoading ? (
+    <div className="flex pt-16 items-center justify-center w-full h-screen bg-background">
+      <Loading />
+    </div>
+  ) : (
+    // @ts-expect-error - Ignore type checking for flowise-fullchatbot
+    <flowise-fullchatbot ref={ref} style={style} class={className} />
+  );
 };
 
 export default React.memo(FlowiseChatbot);

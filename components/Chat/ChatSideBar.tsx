@@ -21,7 +21,7 @@ import { useProfileListStore } from "@/store/useProfileListStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useChatSessionListStore } from "@/store/useChatSessionListStore";
 import { useChatSessionStore } from "@/store/useChatSessionStore";
-import { ProfileHeader } from "@/components/Profile/ProfileHeader";
+import ProfileHeader from "@/components/Profile/ProfileHeader";
 import { ChatSession } from "@prisma/client";
 import React from "react";
 import { useSidebarStore } from "@/store/useSidebarStore";
@@ -146,11 +146,12 @@ const ChatSidebar = () => {
 
   return (
     <SidebarProvider open={collapsible !== "icon"}>
-      <Sidebar className="border-r-2 border-r-slate-200" collapsible={collapsible}>
+      <Sidebar
+        className="border-r-2 border-r-slate-200"
+        collapsible={collapsible}
+      >
         <SidebarHeader className="flex flex-row items-center justify-between p-4">
-          {collapsible === "icon" ? null : (
-            <ProfileHeader profiles={profiles} />
-          )}
+          {collapsible === "icon" ? null : <ProfileHeader />}
           {/* <Button
             variant="ghost"
             size="icon"

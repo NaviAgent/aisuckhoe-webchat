@@ -54,7 +54,7 @@ export default function ChatIdClientPage() {
           <CommonHeader className="absolute z-10 w-full bg-white"></CommonHeader>
         </div>
         {!chatSessionId || chatSessionId !== params.id ? (
-          <div className="flex items-center justify-center w-full h-screen bg-background">
+          <div className="flex pt-16 items-center justify-center w-full h-screen bg-background">
             <Loading />
           </div>
         ) : (

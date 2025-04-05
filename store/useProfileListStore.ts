@@ -27,7 +27,7 @@ export const useProfileListStore = create<ProfileListState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const profiles = await getAllProfiles();
-      set({ profiles: profiles, isLoading: false });
+      set({ profiles, isLoading: false });
     } catch (error) {
       set({ error: error, isLoading: false });
     }

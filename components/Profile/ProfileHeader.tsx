@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Check, Settings } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -26,12 +26,10 @@ import { cn } from "@/lib/utils";
 import { Profile } from "@prisma/client";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useProfileListStore } from "@/store/useProfileListStore";
 
-interface HeaderProfileProps {
-  profiles: Profile[];
-}
-
-export function ProfileHeader({ profiles }: HeaderProfileProps) {
+const ProfileHeader = () => {
+  const { profiles, fetchProfiles } = useProfileListStore();
   const { profileId, setProfileId } = useProfileStore();
   const [selectedProfile, setSelectedProfile] = useState(profiles[0]);
   const [open, setOpen] = useState(false);
@@ -47,7 +45,13 @@ export function ProfileHeader({ profiles }: HeaderProfileProps) {
     if (profileId) {
       setSelectedProfile(profiles.find((p) => p.id === profileId));
     }
-  }, []);
+  });
+
+  // Fetch profiles from API
+  useEffect(() => {
+    console.log("[ProfileHeader] fetch profiles");
+    fetchProfiles();
+  }, [fetchProfiles]);
 
   return (
     <div className="relative">
@@ -232,4 +236,6 @@ export function ProfileHeader({ profiles }: HeaderProfileProps) {
       </DropdownMenu>
     </div>
   );
-}
+};
+
+export default React.memo(ProfileHeader);

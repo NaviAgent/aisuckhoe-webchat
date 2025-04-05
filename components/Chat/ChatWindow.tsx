@@ -18,18 +18,12 @@ span.chatbot-host-bubble[data-testid="host-bubble"] {
 
 interface ChatWindowProps {
   chatId: string;
-  chatHistory: Record<
-    string,
-    { dateTime: Date; message: string; messageId: string; type: string }
-  >[];
+  chatHistory: Record<string, Flowise.ListChatMessagesParams>[];
   saveChatHistory: (
     chatId: string,
     historyData: {
       lead: Flowise.Lead;
-      chatHistory: Record<
-        string,
-        { dateTime: Date; message: string; messageId: string; type: string }
-      >[];
+      chatHistory: Record<string, Flowise.ListChatMessagesParams>[];
     }
   ) => Promise<void>;
 }
@@ -154,6 +148,7 @@ const ChatWindow = ({
         time: true,
       },
       footer: {
+        showFooter: false,
         textColor: "#303235",
         text: "Powered by",
         company: "Aisuckhoe",

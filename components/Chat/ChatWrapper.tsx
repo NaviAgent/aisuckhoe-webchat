@@ -23,18 +23,18 @@ const ChatWrapper = function ({ chatId }: ChatWrapperProps) {
     }
   }, [user, chatId, signInFirebase, fetchChatHistories]);
 
-  if (!user || isLoading) {
-    return <Loading />;
-  } else {
-    return (
-      <ChatWindow
-        key={chatId}
-        chatId={chatId}
-        chatHistory={chatHistory}
-        saveChatHistory={saveChatHistory}
-      ></ChatWindow>
-    );
-  }
+  return !user || isLoading ? (
+    <div className="flex pt-16 items-center justify-center w-full h-screen bg-background">
+      <Loading />
+    </div>
+  ) : (
+    <ChatWindow
+      key={chatId}
+      chatId={chatId}
+      chatHistory={chatHistory}
+      saveChatHistory={saveChatHistory}
+    ></ChatWindow>
+  );
 };
 
 export default React.memo(ChatWrapper);
