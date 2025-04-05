@@ -1,9 +1,10 @@
 "use client";
 
-import ChatSideBar from "@/components/Chat/ChatSideBar";
+import { ChatHeader } from "@/components/Chat/ChatHeader";
 import ChatWrapper from "@/components/Chat/ChatWrapper";
-import { CommonHeader } from "@/components/Common/CommonHeader";
+import CommonSideBar from "@/components/Common/CommonSideBar";
 import Loading from "@/components/ui/loading"; // Corrected to default import
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { useChatSessionStore } from "@/store/useChatSessionStore";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -45,22 +46,25 @@ export default function ChatIdClientPage() {
   // Render the main chat interface once the ID is set
   return (
     <div className="flex flex-row h-screen bg-background">
-      <div className="hidden md:flex">
-        <ChatSideBar />
-      </div>
+      <SidebarProvider>
+        <CommonSideBar />
 
-      <div className="w-full">
-        <div className="relative w-full">
-          <CommonHeader className="absolute z-10 w-full bg-white"></CommonHeader>
-        </div>
-        {!chatSessionId || chatSessionId !== params.id ? (
-          <div className="flex pt-16 items-center justify-center w-full h-screen bg-background">
-            <Loading />
+        <div className="w-full">
+          <div className="relative w-full">
+            <ChatHeader className="absolute z-10 w-full bg-white"></ChatHeader>
           </div>
-        ) : (
-          <ChatWrapper key={chatSessionId} chatId={chatSessionId}></ChatWrapper>
-        )}
-      </div>
+          {!chatSessionId || chatSessionId !== params.id ? (
+            <div className="flex pt-16 items-center justify-center w-full h-screen bg-background">
+              <Loading />
+            </div>
+          ) : (
+            <ChatWrapper
+              key={chatSessionId}
+              chatId={chatSessionId}
+            ></ChatWrapper>
+          )}
+        </div>
+      </SidebarProvider>
     </div>
   );
 }

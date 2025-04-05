@@ -1,25 +1,27 @@
 "use client";
 
-import ChatSideBar from "@/components/Chat/ChatSideBar";
-import { CommonHeader } from "@/components/Common/CommonHeader";
-import { HomeMain } from "@/components/Home/HomeMain";
+import { ChatHeader } from "@/components/Chat/ChatHeader";
+import { ChatStarter } from "@/components/Chat/ChatStarter";
+import CommonSideBar from "@/components/Common/CommonSideBar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function ChatClientPage() {
   return (
     <div className="flex flex-row h-screen bg-background">
-      <div className="hidden md:flex">
-        <ChatSideBar />
-      </div>
+      <SidebarProvider>
+        <CommonSideBar />
 
-      <div className="w-full">
-        <div className="relative w-full">
-          <CommonHeader className="absolute z-10 w-full bg-white"></CommonHeader>
+        <div className="w-full">
+          <div className="relative w-full">
+            <ChatHeader className="absolute z-10 w-full bg-white"></ChatHeader>
+          </div>
+
+          {/* Removed pt-16 as CommonHeader now handles spacing */}
+          <div className="flex h-screen flex-col mx-auto">
+            <ChatStarter></ChatStarter>
+          </div>
         </div>
-        {/* Removed pt-16 as CommonHeader now handles spacing */}
-        <div className="flex h-screen flex-col mx-auto">
-          <HomeMain></HomeMain>
-        </div>
-      </div>
+      </SidebarProvider>
     </div>
   );
 }

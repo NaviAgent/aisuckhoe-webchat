@@ -6,7 +6,7 @@ import { mergeOpenGraph } from "@/lib/mergeOpenGraph";
 import { getServerSideURL } from "@/lib/getURL";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return children
+  return children;
 }
 
 export const metadata: Metadata = {
