@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Settings } from "lucide-react"; // Added Settings icon
 import { cn, groupByTimePeriods } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserButton } from "@clerk/nextjs";
@@ -176,10 +176,27 @@ const CommonSideBar = () => {
         </div>
       </SidebarContent>
 
-      <SidebarFooter className="mt-auto border-t p-4">
-        {/* Bottom Actions */}
+      <SidebarFooter className="mt-auto border-t p-4 space-y-2"> {/* Added space-y-2 for spacing */}
+        {/* Settings Link */}
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            asChild
+            className={cn(
+              "rounded-md p-3 cursor-pointer hover:bg-muted/90 w-full justify-start", // Added w-full and justify-start
+              "scale-100 bg-inherit text-inherit",
+              "transition-transform duration-200 ease-in-out"
+            )}
+          >
+            <Link href="/settings" className="flex items-center gap-2" onClick={() => toggleSidebar()}> {/* Added gap-2 */}
+              <Settings className="h-5 w-5" />
+              <span className="font-medium text-sm">Settings</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
 
-        <UserButton>
+        {/* User Button */}
+        <div className="flex items-center justify-start w-full px-3"> {/* Wrapper for alignment */}
+          <UserButton afterSignOutUrl="/">
           {/* <UserButton.UserProfilePage label="Custom Page" url="custom" labelIcon={<DotIcon />}>
 <div>
 <h1>Custom page</h1>
@@ -187,9 +204,10 @@ const CommonSideBar = () => {
 </div>
 </UserButton.UserProfilePage>
 <UserButton.UserProfileLink label="Homepage" url="/" labelIcon={<DotIcon />} /> */}
-          <UserButton.UserProfilePage label="account" />
-          <UserButton.UserProfilePage label="security" />
-        </UserButton>
+            <UserButton.UserProfilePage label="account" />
+            <UserButton.UserProfilePage label="security" />
+          </UserButton>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

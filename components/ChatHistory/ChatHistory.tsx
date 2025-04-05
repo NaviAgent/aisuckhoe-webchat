@@ -141,13 +141,13 @@ export function ChatHistorySheet() {
   return isMobile ? (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-9 w-9">
+        <Button variant="ghost" size="icon" className="[&_svg]:size-6">
           <ClockIcon></ClockIcon>
           <span className="sr-only">History</span>
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="bottom" className="h-[85vh] rounded-t-xl px-6">
+      <SheetContent side="bottom" className="h-[95vh] rounded-t-xl px-6">
         <SheetHeader className="flex items-center justify-center pb-2">
           <div className="h-1.5 w-12 rounded-full bg-gray-300" />
         </SheetHeader>

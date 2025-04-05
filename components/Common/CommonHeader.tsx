@@ -41,8 +41,8 @@ export function CommonHeader({ className }: CommonHeaderProps) {
         {isMobile && <div className="w-8"></div>}
 
         <div className="flex items-center space-x-4">
-          <Button asChild variant={"ghost"} size="icon">
-            <Link href={"/chat"}>
+          <Button asChild variant="ghost" size="icon">
+            <Link href="/chat">
               <PlusCircle className="h-5 w-5" />
               <span className="sr-only">New Chat</span>
             </Link>

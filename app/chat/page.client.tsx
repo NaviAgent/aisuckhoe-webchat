@@ -1,8 +1,8 @@
 "use client";
 
-import { ChatHeader } from "@/components/Chat/ChatHeader";
 import { ChatStarter } from "@/components/Chat/ChatStarter";
 import CommonSideBar from "@/components/Common/CommonSideBar";
+import { HomeHeader } from "@/components/Home/HomeHeader";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function ChatClientPage() {
@@ -13,7 +13,7 @@ export default function ChatClientPage() {
 
         <div className="w-full">
           <div className="relative w-full">
-            <ChatHeader className="absolute z-10 w-full bg-white"></ChatHeader>
+            <HomeHeader className="absolute z-10 w-full bg-white"></HomeHeader>
           </div>
 
           {/* Removed pt-16 as CommonHeader now handles spacing */}
