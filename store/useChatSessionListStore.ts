@@ -15,9 +15,20 @@ interface ChatSessionListState {
   fetchChatSessions: () => Promise<void>;
   fetchChatSessionsByProfile: (profileId: string) => Promise<void>;
   createChatSession: (
-    data: Omit<ChatSession, "id" | "createdAt" | "updatedAt">
-  ) => Promise<void>;
-  updateChatSession: (id: string, data: Partial<ChatSession>) => Promise<void>;
+    data: Omit<
+      ChatSession,
+      | "id"
+      | "createdAt"
+      | "updatedAt"
+      | "deletedAt"
+      | "messageCount"
+      | "ownerId"
+    >
+  ) => Promise<ChatSession | null>;
+  updateChatSession: (
+    id: string,
+    data: Partial<ChatSession>
+  ) => Promise<ChatSession | null>;
   deleteChatSession: (id: string) => Promise<void>;
 }
 
@@ -52,8 +63,10 @@ export const useChatSessionListStore = create<ChatSessionListState>(
           chatSessions: [...get().chatSessions, newChatSession],
           isLoading: false,
         });
+        return newChatSession;
       } catch (error) {
         set({ error: error, isLoading: false });
+        return null
       }
     },
     updateChatSession: async (id, data) => {
@@ -66,8 +79,10 @@ export const useChatSessionListStore = create<ChatSessionListState>(
           ),
           isLoading: false,
         });
+        return updatedChatSession;
       } catch (error) {
         set({ error: error, isLoading: false });
+        return null
       }
     },
     deleteChatSession: async (id) => {

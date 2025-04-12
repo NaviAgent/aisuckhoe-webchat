@@ -4,7 +4,7 @@ import { Profile } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 
 export async function createProfile(
-  data: Omit<Profile, "id" | "createdAt" | "updatedAt">
+  data: Omit<Profile, "id" | "createdAt" | "updatedAt" | "deletedAt">
 ): Promise<Profile> {
   const { userId } = await auth();
   if (!userId) {
@@ -14,7 +14,7 @@ export async function createProfile(
     data: {
       ...data,
       ownerId: userId!,
-      metadata: data.metadata || {}
+      metadata: data.metadata || {},
     },
   });
 }
@@ -56,7 +56,7 @@ export async function updateProfile(
     where: { id: id, ownerId: userId! },
     data: {
       ...data,
-      metadata: data.metadata || {}
+      metadata: data.metadata || {},
     },
   });
 }

@@ -3,8 +3,9 @@ import { prisma } from "./client";
 import { ChatSession } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 
+// Adjusted the type for 'data' to only require fields needed from the caller
 export async function createChatSession(
-  data: Omit<ChatSession, "id" | "createdAt" | "updatedAt">
+  data: { name: string; profileId: string } & Partial<Omit<ChatSession, 'id' | 'createdAt' | 'updatedAt' | 'ownerId' | 'name' | 'profileId'>>
 ): Promise<ChatSession> {
   const { userId } = await auth();
   if (!userId) {

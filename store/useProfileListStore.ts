@@ -13,7 +13,7 @@ interface ProfileListState {
   error: any;
   fetchProfiles: () => Promise<void>;
   createProfile: (
-    data: Omit<Profile, "id" | "createdAt" | "updatedAt">
+    data: Omit<Profile, "id" | "createdAt" | "updatedAt" | "deletedAt">
   ) => Promise<void>;
   updateProfile: (id: string, data: Partial<Profile>) => Promise<void>;
   deleteProfile: (id: string) => Promise<void>;

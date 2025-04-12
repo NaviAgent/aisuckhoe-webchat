@@ -88,7 +88,7 @@ export function ChatHeader({ className }: ChatHeaderProps) {
           <Ghost className="h-5 w-5" />
           <span className="sr-only">AI Assistant</span>
         </Button> */}
-        <ProfileHeader />
+        {/* <ProfileHeader /> */}
       </div>
     </div>
   );

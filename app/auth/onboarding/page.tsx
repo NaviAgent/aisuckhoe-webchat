@@ -1,61 +1,74 @@
-'use client'
-import { useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
-import { completeOnboarding } from './complete-onboarding'
-import { useState } from 'react'
-import { Profile } from '@prisma/client'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
+"use client";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Profile } from "@prisma/client";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { updateUserMetadata } from "@/lib/clerk/user";
+import { useProfileListStore } from "@/store/useProfileListStore";
 
 export default function Onboarding() {
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const { user } = useUser()
-  const router = useRouter()
+  const { createProfile } = useProfileListStore();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { user } = useUser();
+  const router = useRouter();
 
-  const [formData, setFormData] = useState<Profile>({
-    name: (user?.fullName ?? '') as string,
-    id: '',
+  const [formData, setFormData] = useState<
+    Omit<Profile, "id" | "createdAt" | "updatedAt" | "deletedAt">
+  >({
+    name: (user?.fullName ?? "") as string,
     avatar: null,
-    relationship: 'self',
-    ownerId: user?.id ?? '',
+    relationship: "self",
+    ownerId: user?.id ?? "",
     age: 0,
-    gender: '',
-    medicalHistory: '',
-    createdAt: new Date(),
+    gender: "",
+    medicalHistory: "",
     dob: new Date(),
-    metadata: {}
-  })
+    metadata: {},
+  });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement> |
-      React.ChangeEvent<HTMLTextAreaElement> |
-      React.ChangeEvent<HTMLSelectElement>
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-  }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    formData.age = Number(formData.age)
-    formData.name = user?.fullName || ''
-    formData.ownerId = user?.id || ''
-    formData.dob = new Date(new Date().setMonth(0, 1) - formData.age * 365 * 24 * 60 * 60 * 1000)
+    e.preventDefault();
+    formData.age = Number(formData.age);
+    formData.name = user?.fullName || "";
+    formData.ownerId = user?.id || "";
+    formData.dob = new Date(
+      new Date().setMonth(0, 1) - formData.age * 365 * 24 * 60 * 60 * 1000
+    );
 
-    setLoading(true)
-    document.title = 'Đang khởi tạo...'
-    const res = await completeOnboarding(formData)
-    if (res?.message) {
-      document.title = 'Xong...'
-      router.push('/')
+    setLoading(true);
+    document.title = "Đang khởi tạo...";
+
+    const { data, error } = await updateUserMetadata({
+      onboardingComplete: true,
+    });
+    await createProfile({
+      ...formData,
+      metadata: { onboardingComplete: true },
+    });
+
+    if (data) {
+      document.title = "Xong...";
+      router.replace("/");
     }
-    if (res?.error) {
-      setError(res.error)
-      setLoading(false)
+    if (error) {
+      setError(error);
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-4">
@@ -77,7 +90,9 @@ export default function Onboarding() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Gender Selection */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Gender</Label>
+              <Label className="text-sm font-medium text-gray-700">
+                Gender
+              </Label>
               <select
                 name="gender"
                 value={formData.gender}
@@ -97,7 +112,7 @@ export default function Onboarding() {
               <Input
                 id="age"
                 name="age"
-                type='number'
+                type="number"
                 value={formData.age}
                 onChange={handleChange}
                 className="col-span-3"
@@ -105,18 +120,22 @@ export default function Onboarding() {
                 list="age-options"
               />
               <datalist id="age-options">
-                {Array.from({ length: 100 - 18 }, (_, i) => i + 18).map(age => (
-                  <option key={age} value={age} />
-                ))}
+                {Array.from({ length: 100 - 18 }, (_, i) => i + 18).map(
+                  (age) => (
+                    <option key={age} value={age} />
+                  )
+                )}
               </datalist>
             </div>
 
             {/* Medical History */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Medical History</Label>
+              <Label className="text-sm font-medium text-gray-700">
+                Medical History
+              </Label>
               <textarea
                 name="medicalHistory"
-                value={formData.medicalHistory || ''}
+                value={formData.medicalHistory || ""}
                 onChange={handleChange}
                 placeholder="Enter your medical history..."
                 className="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[100px] resize-y"
@@ -132,18 +151,29 @@ export default function Onboarding() {
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    />
                   </svg>
                   Processing...
                 </div>
               ) : (
-                'Create Profile'
+                "Create Profile"
               )}
             </Button>
           </form>
         </div>
       </div>
     </div>
-  )
+  );
 }

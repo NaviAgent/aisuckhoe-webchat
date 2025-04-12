@@ -27,6 +27,8 @@ export const ENV = {
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
   POSTGRESQL_URL: process.env.POSTGRESQL_URL,
   FIREBASE_ADMIN_CERT_PATH: process.env.FIREBASE_ADMIN_CERT_PATH,
+  REDIS_URL: process.env.REDIS_URL, // Added Redis URL
+  REDIS_TOKEN: process.env.REDIS_TOKEN, // Added Redis Token
 };
 
 const clientEnvSchema = z.object({
@@ -47,7 +49,9 @@ const clientEnvSchema = z.object({
 const serverEnvSchema = z.object({
   CLERK_SECRET_KEY: z.string(),
   POSTGRESQL_URL: z.string(),
-  FIREBASE_ADMIN_CERT_PATH: z.string()
+  FIREBASE_ADMIN_CERT_PATH: z.string(),
+  REDIS_URL: z.string().url(), // Add Redis URL validation
+  REDIS_TOKEN: z.string().optional(), // Add Redis Token validation
 });
 
 // Validate env dựa trên môi trường

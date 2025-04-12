@@ -9,43 +9,85 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// ===== Profile =====
 model Profile {
-  id             String        @id @default(uuid(7))
+  id             String        @id @default(uuid())
   name           String
   avatar         String?
   gender         String
   age            Int
   dob            DateTime
   medicalHistory String?
-  createdAt      DateTime      @default(now())
   relationship   String
   ownerId        String
-  ChatSession    ChatSession[]
   metadata       Json?         @default("{}")
+  createdAt      DateTime      @default(now())
+  deletedAt      DateTime?
+  ChatSession    ChatSession[]
+
+  @@index([ownerId, createdAt])
+  @@index([deletedAt])
 }
 
-model UserQuota {
-  ownerId       String    @id @default(uuid(7))
-  title         String
-  maxTokens     Int
-  usedTokens    Int       @default(0)
-  maxImages     Int
-  usedImages    Int       @default(0)
-  maxProfiles   Int
-  usedProfiles  Int       @default(0)
-  maxMessages   Int
-  usedMessages  Int       @default(0)
-  startedAt     DateTime  @default(now())
-  resetAt       DateTime  @default(now())
-  metadata      Json?     @default("{}")
-}
-
+// ===== ChatSession =====
 model ChatSession {
-  id           String   @id @default(uuid(7))
+  id           String   @id @default(uuid())
   name         String
   createdAt    DateTime @default(now())
   messageCount Int      @default(0)
-  profile      Profile  @relation(fields: [profileId], references: [id])
-  profileId    String
   ownerId      String
+  aiProfileId  String   @default("0")
+
+  profile   Profile   @relation(fields: [profileId], references: [id])
+  profileId String
+  deletedAt DateTime?
+
+  @@index([ownerId, profileId, createdAt(sort: Desc)])
+  @@index([deletedAt])
+}
+
+// ===== Transaction =====
+model Transaction {
+  id        Int                  @id @default(autoincrement())
+  ownerId   String
+  amount    Int
+  sign      Int
+  type      TRANSACTION_TYPE
+  cat       TRANSACTION_CATEGORY
+  createdAt DateTime             @default(now())
+  paymentId String
+  uniqueId  String               @unique
+
+  @@unique([ownerId, paymentId, cat, type])
+  @@index([ownerId, paymentId, cat, type, createdAt(sort: Desc)])
+}
+
+// ===== Membership =====
+model Membership {
+  id                  String   @id @default(uuid())
+  ownerId             String
+  profileLimit        Int
+  dailyMessageLimit   Int
+  monthlyMessageLimit Int
+  aiVersion           String[]
+  storageLimit        Int
+  interval            Int
+  startAt             DateTime
+  endedAt             DateTime
+
+  @@index([ownerId, startAt, endedAt(sort: Desc)])
+}
+
+// ===== Enums =====
+enum TRANSACTION_TYPE {
+  ADD
+  SUBTRACT
+  EQUAL
+  REVERSAL
+}
+
+enum TRANSACTION_CATEGORY {
+  MESSAGE
+  TOKEN
+  STORAGE
 }

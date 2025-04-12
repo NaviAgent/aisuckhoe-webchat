@@ -1,17 +1,31 @@
 "use client";
 
 import { ChatHeader } from "@/components/Chat/ChatHeader";
-import ChatWrapper from "@/components/Chat/ChatWrapper";
+import ChatWindow from "@/components/Chat/ChatWindow";
 import CommonSideBar from "@/components/Common/CommonSideBar";
 import Loading from "@/components/ui/loading"; // Corrected to default import
 import { SidebarProvider } from "@/components/ui/sidebar";
+import useChatHistoryStore from "@/store/useChatHistoryStore";
 import { useChatSessionStore } from "@/store/useChatSessionStore";
+import { useFirebase } from "@/store/useFirebase";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ChatIdClientPage() {
   const params = useParams<{ id: string }>();
   const { chatSessionId, setChatSessionId } = useChatSessionStore();
+
+  const { user, signInFirebase } = useFirebase();
+  const { chatHistory, isLoading, fetchChatHistories, saveChatHistory } =
+    useChatHistoryStore();
+
+  useEffect(() => {
+    if (!user) {
+      signInFirebase();
+    } else if (chatSessionId) {
+      fetchChatHistories(chatSessionId);
+    }
+  }, [user, chatSessionId, signInFirebase, fetchChatHistories]);
 
   useEffect(() => {
     // Ensure params.id is valid before setting
@@ -53,15 +67,20 @@ export default function ChatIdClientPage() {
           <div className="relative w-full">
             <ChatHeader className="absolute z-10 w-full bg-white"></ChatHeader>
           </div>
-          {!chatSessionId || chatSessionId !== params.id ? (
+          {!chatSessionId ||
+          chatSessionId !== params.id ||
+          !user ||
+          isLoading ? (
             <div className="flex pt-16 items-center justify-center w-full h-screen bg-background">
               <Loading />
             </div>
           ) : (
-            <ChatWrapper
+            <ChatWindow
               key={chatSessionId}
               chatId={chatSessionId}
-            ></ChatWrapper>
+              chatHistory={chatHistory}
+              saveChatHistory={saveChatHistory}
+            ></ChatWindow>
           )}
         </div>
       </SidebarProvider>
