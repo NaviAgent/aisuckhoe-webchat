@@ -24,9 +24,9 @@ export function HomeHeader({ className }: HomeHeaderProps) {
     >
       {isMobile ? (
         <Button asChild variant="ghost" size="icon" className="[&_svg]:size-6">
-          <Link href="/chats">
+          {/* <Link href="/chats">
             <ChevronLeft/>
-          </Link>
+          </Link> */}
         </Button>
       ) : (
         <SidebarTrigger />

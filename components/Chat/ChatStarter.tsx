@@ -2,17 +2,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { Button } from "@/components/ui/button";
-import { Paperclip, Send, ChevronDown, ImagePlus } from "lucide-react";
+import { Paperclip, Send, ImagePlus } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useProfileListStore } from "@/store/useProfileListStore";
 import { useChatSessionListStore } from "@/store/useChatSessionListStore";
+import ChatProfileSwitcher from "./ChatProfileSwitcher";
+import useDraftMessage from "@/store/useDraftMessage";
 
 export function ChatStarter() {
   const router = useRouter(); // Initialize router
   const { profileId } = useProfileStore();
   const { profiles } = useProfileListStore();
   const { createChatSession } = useChatSessionListStore();
+  const { setMessage } = useDraftMessage();
+
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
@@ -38,8 +42,9 @@ export function ChatStarter() {
         profileId: profileId,
         aiProfileId: "",
       });
-      if(!newSession) throw new Error('Failed to start a new chat')
+      if (!newSession) throw new Error("Failed to start a new chat");
       // Navigate to the new chat session page
+      setMessage(inputValue);
       router.push(`/chat/${newSession?.id}`);
     } catch (error) {
       console.error("Failed to start new chat:", error);
@@ -51,9 +56,13 @@ export function ChatStarter() {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Check for Shift + Enter or Cmd/Ctrl + Enter
-    if ((event.shiftKey || event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+    if (
+      (event.shiftKey || event.metaKey || event.ctrlKey) &&
+      event.key === "Enter"
+    ) {
       event.preventDefault(); // Prevent default newline insertion
-      if (!isLoading && inputValue.trim()) { // Only send if not loading and input is not empty
+      if (!isLoading && inputValue.trim()) {
+        // Only send if not loading and input is not empty
         sendHandler(); // Trigger the send action
       }
     }
@@ -104,14 +113,8 @@ export function ChatStarter() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Button
-                variant="ghost"
-                className="flex items-center space-x-1 text-sm"
-              >
-                <span>Hỏi cho</span>
-                <span>{profile?.name}</span>
-                <ChevronDown className="h-4 w-4" />
-              </Button>
+              <ChatProfileSwitcher></ChatProfileSwitcher>
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -154,9 +157,9 @@ export function ChatStarter() {
       </div> */}
 
       {/* Switch to Personas */}
-      <Button variant="ghost" className="mt-16 text-base text-muted-foreground">
+      {/* <Button variant="ghost" className="mt-16 text-base text-muted-foreground">
         Switch to Personas
-      </Button>
+      </Button> */}
     </div>
   );
 }

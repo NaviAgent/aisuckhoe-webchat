@@ -5,16 +5,18 @@ import ChatWindow from "@/components/Chat/ChatWindow";
 import CommonSideBar from "@/components/Common/CommonSideBar";
 import Loading from "@/components/ui/loading"; // Corrected to default import
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { FlowiseChatbotProvider } from "@/contexts/FlowiseChatbotContext";
 import useChatHistoryStore from "@/store/useChatHistoryStore";
 import { useChatSessionStore } from "@/store/useChatSessionStore";
 import { useFirebase } from "@/store/useFirebase";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
+// Define props interface
 export default function ChatIdClientPage() {
+  // Accept props
   const params = useParams<{ id: string }>();
   const { chatSessionId, setChatSessionId } = useChatSessionStore();
-
   const { user, signInFirebase } = useFirebase();
   const { chatHistory, isLoading, fetchChatHistories, saveChatHistory } =
     useChatHistoryStore();
@@ -75,12 +77,13 @@ export default function ChatIdClientPage() {
               <Loading />
             </div>
           ) : (
-            <ChatWindow
-              key={chatSessionId}
-              chatId={chatSessionId}
-              chatHistory={chatHistory}
-              saveChatHistory={saveChatHistory}
-            ></ChatWindow>
+            <FlowiseChatbotProvider>
+              <ChatWindow
+                chatId={chatSessionId}
+                chatHistory={chatHistory}
+                saveChatHistory={saveChatHistory}
+              ></ChatWindow>
+            </FlowiseChatbotProvider>
           )}
         </div>
       </SidebarProvider>

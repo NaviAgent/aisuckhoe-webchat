@@ -14,12 +14,13 @@ import {
 import { useProfileStore } from "@/store/useProfileStore";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useProfileListStore } from "@/store/useProfileListStore";
-import ProfileDisplay from "./ProfileDisplay"; // Import new component
-import ProfileEditDialog from "./ProfileEditDialog"; // Import new component
-import ProfileCreateDialog from "./ProfileCreateDialog"; // Import new component
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"; // Keep Avatar imports if needed here
+import ProfileCreateDialog from "../Profile/ProfileCreateDialog";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { PlusCircle } from "lucide-react";
+import Link from "next/link";
+import ProfileDisplay from "../Profile/ProfileDisplay";
 
-const ProfileHeader = () => {
+const ChatProfileSwitcher = () => {
   const { profiles, fetchProfiles } = useProfileListStore();
   const { profileId, setProfileId } = useProfileStore();
   // Keep selectedProfile state local to ProfileHeader for now
@@ -77,48 +78,18 @@ const ProfileHeader = () => {
             className="flex w-full items-center justify-start p-0 hover:bg-transparent"
             disabled={!selectedProfile} // Disable trigger if no profile selected/loaded
           >
-            <ProfileDisplay profile={selectedProfile} isMobile={isMobile} />
+            <ProfileDisplay profile={selectedProfile} isMobile={true} />
+            {/* <span>Hỏi cho</span>
+            <span>
+              {selectedProfile?.relationship === "self"
+                ? "tôi"
+                : selectedProfile?.name}
+            </span> */}
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="w-80" align="end">
-          {/* Display selected profile info and Edit button */}
-          {selectedProfile && (
-            <div className="flex items-center justify-between px-4 py-2">
-              <div className="flex items-center">
-                <Avatar className="h-12 w-12 rounded">
-                  <AvatarImage
-                    src={`/placeholder.svg?height=48&width=48&text=${selectedProfile.name[0]}`}
-                    alt={selectedProfile.name}
-                    className={`rounded bg-gradient-to-br ${selectedProfile.avatar}`}
-                  />
-                  <AvatarFallback
-                    className={`rounded bg-gradient-to-br from-green-400 to-teal-400`}
-                  >
-                    {selectedProfile.name[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="ml-3">
-                  <p className="text-base font-medium">
-                    {selectedProfile.name}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedProfile.age} | {selectedProfile.gender}
-                  </p>
-                </div>
-              </div>
-              {/* Render Edit Dialog and pass onSuccess handler */}
-              <ProfileEditDialog
-                profile={selectedProfile}
-                onSuccess={handleSuccess}
-              />
-            </div>
-          )}
-
-          <DropdownMenuSeparator />
-
           {/* Render Profile Switcher */}
-          <p className="mb-2 px-2 text-sm font-medium">Switch Profile</p>
           <DropdownMenuRadioGroup
             className="px-2"
             value={selectedProfile?.id}
@@ -156,10 +127,18 @@ const ProfileHeader = () => {
           </DropdownMenuRadioGroup>
 
           <DropdownMenuSeparator />
-
           {/* Render Create Profile Dialog Trigger and pass onSuccess handler */}
           <div className="px-2 py-2">
-            <ProfileCreateDialog onSuccess={handleSuccess} />
+            {isMobile ? (
+              <Button asChild variant="ghost" className="w-full justify-start">
+                <Link href="/profiles/new">
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Thêm người thân
+                </Link>
+              </Button>
+            ) : (
+              <ProfileCreateDialog onSuccess={handleSuccess} />
+            )}
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -169,4 +148,4 @@ const ProfileHeader = () => {
 
 // Using React.memo might be less effective now if selectedProfile state is local,
 // but keep it for now as profileId from store still influences it.
-export default React.memo(ProfileHeader);
+export default React.memo(ChatProfileSwitcher);

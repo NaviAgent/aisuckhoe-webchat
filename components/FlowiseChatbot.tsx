@@ -1,22 +1,14 @@
 "use client";
 
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useEffect, useState, forwardRef, useRef } from "react";
 import type { BubbleProps } from "@ivannguyendev/flowise-embed";
 import Loading from "./ui/loading";
+import { useFlowiseChatbot } from "@/contexts/FlowiseChatbotContext";
 
 type Props = BubbleProps & {
   style?: React.CSSProperties;
   className?: string;
-  onReady?: () => void; // Add the onReady callback prop
 };
-
-type FullPageChatElement = HTMLElement & Props;
 
 // Define the type for the exposed methods
 export interface FlowiseChatbotHandle {
@@ -24,28 +16,31 @@ export interface FlowiseChatbotHandle {
 }
 
 const FlowiseChatbot = forwardRef<FlowiseChatbotHandle, Props>(
-  ({ style, className, onReady, ...assignableProps }, ref) => {
+  ({ style, className, ...assignableProps }, ref) => {
     // Destructure onReady
-    const chatRef = useRef<FullPageChatElement | null>(null);
+    const { setReady, chatRef } = useFlowiseChatbot();
     const [isLoading, setIsLoading] = useState(true);
     let isReady = false;
 
     useEffect(() => {
       let isMounted = true; // Flag to prevent state updates on unmounted component
       (async () => {
+        console.log("[FlowiseChatbot] init chat js");
         // Ensure this import runs only once on mount
         await import("@ivannguyendev/flowise-embed/dist/web.js");
         if (isMounted) {
-          setIsLoading(false); // Set loading to false after import
+          setIsLoading(false);
         }
       })();
 
       // Cleanup function for the effect
       return () => {
-        isMounted = false; // Set flag to false on unmount
-        // Assuming the custom element cleans itself up when removed from DOM.
+        isReady = false;
+        // chatRef.current = null;
+        setReady(false);
+        isMounted = false;
         console.log(
-          "FlowiseChatbot unmounted, relying on custom element cleanup."
+          "[FlowiseChatbot] unmounted, relying on custom element cleanup."
         );
       };
     }, []); // Empty dependency array ensures this runs only once
@@ -57,40 +52,11 @@ const FlowiseChatbot = forwardRef<FlowiseChatbotHandle, Props>(
 
       // Check if not already ready and trigger onReady
       if (!isReady) {
+        console.log("[FlowiseChatbot] is ready to send message");
         isReady = true;
-        onReady?.(); // Call the callback if provided
+        setReady(true);
       }
-    }, [assignableProps, isLoading, isReady, onReady]); // Add dependencies
-
-    // Expose the sendMessage function using useImperativeHandle
-    useImperativeHandle(
-      ref,
-      () => ({
-        // Ensure sendMessage is only callable when ready
-        sendMessage: (text: string, files?: File[]) => {
-          if (!chatRef.current || !isReady) {
-            // Check isReady state
-            console.error(
-              "Flowise chatbot element not found or not ready. Make sure the chatbot is initialized before sending messages."
-            );
-            return;
-          }
-          // ... rest of sendMessage logic
-          try {
-            (chatRef.current as any).externalCommand = {
-              text,
-              files: files || [],
-              timestamp: Date.now(),
-            };
-          } catch (error) {
-            console.error(
-              "Failed to set externalCommand property on the chatbot element:",
-              error
-            );
-          }
-        },
-      }),
-    ); // Add isReady dependency to re-create the handle when readiness changes
+    }, [assignableProps, isLoading]); // Add dependencies
 
     return isLoading ? (
       <div className="flex pt-16 items-center justify-center w-full h-screen bg-background">

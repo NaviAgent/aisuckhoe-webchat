@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import FlowiseChatbot, {
-  FlowiseChatbotHandle,
-} from "@/components/FlowiseChatbot";
+import React, { useEffect } from "react"; // Added useCallback
+import { useFlowiseChatbot } from "@/contexts/FlowiseChatbotContext"; // Import new context items
 import { StorageAdapter } from "@ivannguyendev/flowise-embed/dist/utils/storage/storageAdapter";
 import Flowise from "@/types/flowise";
 import { MessageType } from "@ivannguyendev/flowise-embed/dist/components/Bot";
 import { BubbleTheme } from "@ivannguyendev/flowise-embed/dist/features/bubble/types";
+import FlowiseChatbot from "../FlowiseChatbot";
+import useDraftMessage from "@/store/useDraftMessage";
 
 const welcomeMessage = `Xin chào! 😊
 Tôi là Aisuckhoe, trợ lý sức khỏe AI của bạn. Tôi luôn sẵn sàng cung cấp thông tin y tế đáng tin cậy, dựa trên các nguồn uy tín.
@@ -37,8 +37,9 @@ const ChatWindow = ({
   chatHistory,
   saveChatHistory,
 }: ChatWindowProps) => {
-  console.log("[ChatWindow] init", chatId);
-  const chatRef = useRef<FlowiseChatbotHandle | null>(null);
+  const { isReady, chatRef, sendMessage } = useFlowiseChatbot();
+  const { message, reset } = useDraftMessage();
+  // chatRef is no longer needed for the component itself
   const logoURL = `https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png?${Math.floor(Date.now() / 100000)}`;
   const chatflowid = "be686718-e28e-4fad-af47-f53d3a73d5b4";
   const apiHost = "https://flowise.aisuckhoe.com";
@@ -53,7 +54,7 @@ const ChatWindow = ({
       return { chatHistory, chatId, lead: null };
     },
     async removeMessages(chatflowid, chatId) {
-      console.log("removeMessages", chatId);
+      console.log("[ChatWindow] removeMessages", chatId);
     },
     async saveMessages(chatflowid, { chatId, chatHistory, lead }) {
       if (!chatHistory) return;
@@ -79,11 +80,10 @@ const ChatWindow = ({
         theme.chatWindow.textInput.maxCharsWarningMessage = "";
         // theme.chatWindow.textInput.maxChars = 500;
       }
-      console.log({ userInput });
     },
     // The bot message stack has changed
     observeMessages: (messages: string | boolean | object | MessageType[]) => {
-      console.log({ messages });
+      // console.log("[ChatWindow] observeMessages", { messages });
       // console.log({ messages });
     },
     // The bot loading signal changed
@@ -193,23 +193,30 @@ const ChatWindow = ({
     },
   };
 
-  const onReady = ()=>{
-    if (!chatRef?.current) return;
-    chatRef.current.sendMessage("xinc hào");
-  }
+  useEffect(() => {
+    // Send the initial message once the chatbot is ready and if initialMessage exists
+    if (isReady && message) {
+      console.log("[ChatWindow] is ready");
+      sendMessage(message);
+      reset();
+    } else if (isReady) {
+      console.log("[ChatWindow] is ready");
+      // Optionally send an empty message or do nothing if no initial message
+      // sendMessage(''); // Removed sending empty message by default
+    }
+  }, [isReady, sendMessage, message]);
 
   return (
+    // Wrap with the Provider, passing all necessary props
     <FlowiseChatbot
-      ref={chatRef}
       chatflowid={chatflowid}
       apiHost={apiHost}
       chatflowConfig={chatflowConfig}
       observersConfig={observersConfig}
       theme={theme}
-      chatId={chatId}
+      chatId={chatId} // Pass chatId to the provider if it needs it directly
       storageAdapter={storageAdapter}
-      onReady={onReady}
-    />
+    ></FlowiseChatbot>
   );
 };
 

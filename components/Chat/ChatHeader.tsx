@@ -25,9 +25,9 @@ export function ChatHeader({ className }: ChatHeaderProps) {
     >
       {isMobile ? (
         <Button asChild variant="ghost" size="icon" className="[&_svg]:size-6">
-          <Link href="/chats">
+          {/* <Link href="/chats">
             <ChevronLeft />
-          </Link>
+          </Link> */}
         </Button>
       ) : (
         <SidebarTrigger />
@@ -74,16 +74,15 @@ export function ChatHeader({ className }: ChatHeaderProps) {
 
         <ChatHistorySheet />
         {/* Chat Setting Sheet Trigger */}
-        <Sheet>
+        {/* <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="[&_svg]:size-6">
               <Settings />
               <span className="sr-only">Chat Settings</span>
             </Button>
           </SheetTrigger>
-          {/* ChatSetting component is rendered inside the Sheet */}
           <ChatSetting />
-        </Sheet>
+        </Sheet> */}
         {/* <Button variant="ghost" size="icon">
           <Ghost className="h-5 w-5" />
           <span className="sr-only">AI Assistant</span>
