@@ -7,15 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-  DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
   IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/aisuckhoe-webchat
-  CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-  POSTGRESQL_URL: ${{ secrets.POSTGRESQL_URL }}
-  FIREBASE_ADMIN_CERT_PATH: ${{ secrets.FIREBASE_ADMIN_CERT_PATH }}
-  REDIS_URL: ${{ secrets.REDIS_URL }}
-  CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
 
 jobs:
   build-and-push:
@@ -31,21 +23,21 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ env.DOCKER_HUB_USERNAME }}
-          password: ${{ env.DOCKER_HUB_TOKEN }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Generate build args
-        id: build-args
-        run: |
-          args=""
-          while IFS='=' read -r key value; do
-            if [[ "$key" == BUILD_* ]]; then
-              args="$args\n$key=$value"
-            fi
-          done < <(env)
-          echo "build_args<<EOF" >> $GITHUB_OUTPUT
-          echo -e "$args" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+      # - name: Generate build args
+      #   id: build-args
+      #   run: |
+      #     args=""
+      #     while IFS='=' read -r key value; do
+      #       if [[ "$key" == BUILD_* ]]; then
+      #         args="$args\n$key=$value"
+      #       fi
+      #     done < <(env)
+      #     echo "build_args<<EOF" >> $GITHUB_OUTPUT
+      #     echo -e "$args" >> $GITHUB_OUTPUT
+      #     echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Extract metadata for Docker
         id: meta
@@ -65,4 +57,14 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: ${{ steps.build-args.outputs.build_args }}
+          build-args: |
+            GIT_TOKEN=${{ secrets.GIT_TOKEN }}
+            GIT_COMMIT=${{ github.sha }}
+            GIT_BRANCH=${{ github.ref_name }} 
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+            CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+            POSTGRESQL_URL: ${{ secrets.POSTGRESQL_URL }}
+            FIREBASE_ADMIN_CERT_PATH: ${{ secrets.FIREBASE_ADMIN_CERT_PATH }}
+            REDIS_URL: ${{ secrets.REDIS_URL }}
+            CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
