@@ -22,7 +22,7 @@ const ENV = {
   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID:
     process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
   NEXT_PUBLIC_APP_LOGO:
-    "https://asset.cloudinary.com/aisuckhoe/f489f98201dddb2c20f0dabadffbaea6",
+    "https://res.cloudinary.com/aisuckhoe/image/upload/w_100,ar_1:1,c_fill,g_auto,e_art:hokusai/v1744884433/logo_lrpuv3.svg",
   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:
     process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   NEXT_PUBLIC_CLOUDINARY_API_KEY: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
@@ -39,6 +39,7 @@ const ENV = {
 };
 
 const clientEnvSchema = z.object({
+  NEXT_PUBLIC_APP_LOGO: z.string().url(),
   NEXT_PUBLIC_SERVER_URL: z.string(),
   NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL: z.string().optional(),
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),

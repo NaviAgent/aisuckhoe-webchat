@@ -17,7 +17,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const locale = await getCurrentLocale(); // Await the locale
-
   return (
     <ClerkProvider>
       {/* Use the dynamic locale for the lang attribute */}
