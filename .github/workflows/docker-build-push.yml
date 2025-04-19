@@ -61,9 +61,9 @@ jobs:
             GIT_COMMIT=${{ github.sha }}
             GIT_BRANCH=${{ github.ref_name }} 
             NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-            CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-            POSTGRESQL_URL: ${{ secrets.POSTGRESQL_URL }}
-            FIREBASE_ADMIN_CERT_PATH: ${{ secrets.FIREBASE_ADMIN_CERT_PATH }}
-            REDIS_URL: ${{ secrets.REDIS_URL }}
-            CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+            CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}
+            POSTGRESQL_URL=${{ secrets.POSTGRESQL_URL }}
+            FIREBASE_ADMIN_CERT_PATH=${{ secrets.FIREBASE_ADMIN_CERT_PATH }}
+            REDIS_URL=${{ secrets.REDIS_URL }}
+            CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
