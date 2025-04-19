@@ -1,6 +1,6 @@
-import "@/lib/cloudinary/server";
 import { serverEnv } from "@/lib/env";
 import { v2 as cloudinary } from "cloudinary";
+import "@/lib/cloudinary/server";
 
 export async function POST(request: Request) {
   const body = await request.json();

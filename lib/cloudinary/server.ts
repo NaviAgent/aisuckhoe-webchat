@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary"; // Try default import
 import { clientEnv, serverEnv } from "../env";
 
+console.log(clientEnv, serverEnv)
 // Configure Cloudinary (ensure environment variables are set)
 // Note: Ensure CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET are set in your .env
 cloudinary.config({
@@ -10,3 +11,4 @@ cloudinary.config({
   api_secret: serverEnv!.CLOUDINARY_API_SECRET,
   secure: true, // Recommended for secure URLs
 });
+
