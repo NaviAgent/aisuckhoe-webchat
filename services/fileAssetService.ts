@@ -1,9 +1,8 @@
 "use server";
 
+import { initCloudinary } from "@/lib/cloudinary/server";
 import prisma from "@/lib/prisma/client";
 import { FileAsset } from "@prisma/client";
-import "@/lib/cloudinary/server";
-import { v2 as cloudinary } from "cloudinary";
 /**
  * Creates a new FileAsset record in the database after a successful Cloudinary upload.
  * @param uploadResult - The result object from the Cloudinary upload widget.
@@ -248,6 +247,8 @@ export async function deleteFileAsset(
       };
     }
 
+    const cloudinary = await initCloudinary();
+
     // 1. Delete from Cloudinary
     // Use destroy method, need the public_id and resource_type
     await cloudinary.uploader.destroy(assetToDelete.cloudinaryPublicId, {
@@ -338,6 +339,7 @@ export async function destroyFileAsset(
   resourceType: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const cloudinary = await initCloudinary();
     // 1. Delete from Cloudinary
     // Use destroy method, need the public_id and resource_type
     await cloudinary.uploader.destroy(cloudinaryPublicId, {
