@@ -38,9 +38,9 @@ const ChatWindow = ({
   saveChatHistory,
 }: ChatWindowProps) => {
   const { isReady, chatRef, sendMessage } = useFlowiseChatbot();
-  const { message, reset } = useDraftMessage();
+  const { message, images, reset } = useDraftMessage();
   // chatRef is no longer needed for the component itself
-  const logoURL = `https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png?${Math.floor(Date.now() / 100000)}`;
+  const logoURL = `https://asset.cloudinary.com/aisuckhoe/f489f98201dddb2c20f0dabadffbaea6?${Math.floor(Date.now() / 100000)}`;
   const chatflowid = "be686718-e28e-4fad-af47-f53d3a73d5b4";
   const apiHost = "https://flowise.aisuckhoe.com";
   const chatflowConfig = {
@@ -197,7 +197,7 @@ const ChatWindow = ({
     // Send the initial message once the chatbot is ready and if initialMessage exists
     if (isReady && message) {
       console.log("[ChatWindow] is ready");
-      sendMessage(message);
+      sendMessage(message, images || []);
       reset();
     } else if (isReady) {
       console.log("[ChatWindow] is ready");

@@ -15,14 +15,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { relationships } from '@/lib/relationship'; // Import relationships
+import { relationships } from "@/lib/constant"; // Import relationships
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 interface ProfileEditDialogProps {
   profile: Profile | undefined;
   onSuccess: () => void; // Add onSuccess prop
 }
 
-const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({ profile, onSuccess }) => {
+const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
+  profile,
+  onSuccess,
+}) => {
   // State for form data
   const [formData, setFormData] = useState<Profile | undefined>(profile);
   // State to manage dialog open/close
@@ -41,9 +50,16 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({ profile, onSucces
   }
 
   // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData((prevData) => (prevData ? { ...prevData, [name]: value } : undefined));
+    setFormData((prevData) =>
+      prevData ? { ...prevData, [name]: value } : undefined
+    );
   };
 
   // Handle form submission
@@ -55,44 +71,64 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({ profile, onSucces
     setError(null); // Clear previous errors
 
     const updatedData = {
-        ...formData,
-        age: Number(formData.age) // Ensure age is a number
+      ...formData,
+      age: Number(formData.age), // Ensure age is a number
     };
     // Remove dob calculation as it's not in the original ProfileForm logic shown
     // delete updatedData.dob;
 
     try {
-        const res = await fetch(`/api/profiles/${formData.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedData),
-        });
+      const res = await fetch(`/api/profiles/${formData.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData),
+      });
 
-        if (res.ok) {
-            onSuccess(); // Call success handler (e.g., refresh list)
-            setOpen(false); // Close dialog on success
-        } else {
-            const errorData = await res.text();
-            setError(`Failed to update profile: ${errorData}`);
-            console.error("Failed to update profile:", errorData);
-        }
+      if (res.ok) {
+        onSuccess(); // Call success handler (e.g., refresh list)
+        setOpen(false); // Close dialog on success
+      } else {
+        const errorData = await res.text();
+        setError(`Failed to update profile: ${errorData}`);
+        console.error("Failed to update profile:", errorData);
+      }
     } catch (err) {
-        console.error("Error submitting profile update:", err);
-        setError("An unexpected error occurred. Please try again.");
+      console.error("Error submitting profile update:", err);
+      setError("An unexpected error occurred. Please try again.");
     } finally {
-        setIsLoading(false); // Set loading false
+      setIsLoading(false); // Set loading false
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) { setOpen(false); setError(null); setFormData(profile); } else { setOpen(true); } }}>
-      {/* Keep Trigger as is */}
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Settings className="h-4 w-4" />
-          <span className="sr-only">Edit profile</span>
-        </Button>
-      </DialogTrigger>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          setOpen(false);
+          setError(null);
+          setFormData(profile);
+        } else {
+          setOpen(true);
+        }
+      }}
+    >
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Settings className="h-4 w-4" />
+                <span className="sr-only">Edit profile</span>
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p> Edit profile </p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
@@ -122,7 +158,9 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({ profile, onSucces
                     {formData.name[0]}
                   </AvatarFallback>
                 </Avatar>
-                <Button variant="outline" size="sm" type="button"> {/* Set type="button" */}
+                <Button variant="outline" size="sm" type="button">
+                  {" "}
+                  {/* Set type="button" */}
                   Change Avatar {/* TODO: Implement avatar change logic */}
                 </Button>
               </div>
@@ -152,7 +190,8 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({ profile, onSucces
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
-                    <option value="Other">Other</option> {/* Added Other option */}
+                    <option value="Other">Other</option>{" "}
+                    {/* Added Other option */}
                   </select>
                 </div>
                 <div className="grid gap-2">
@@ -174,30 +213,32 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({ profile, onSucces
                   <Input
                     id="relationship"
                     name="relationship"
-                    value={formData.relationship || ''} // Handle potential null/undefined
+                    value={formData.relationship || ""} // Handle potential null/undefined
                     onChange={handleChange}
-                    placeholder="e.g., Self, Son, Daughter"
+                    placeholder={Object.values(relationships).join(",")}
                     list="relationship-options"
                     required // Make relationship required like in ProfileForm
                   />
                   <datalist id="relationship-options">
                     {Object.keys(relationships).map((key) => (
-                      <option key={key} value={relationships[key as keyof typeof relationships]} />
+                      <option
+                        key={key}
+                        value={relationships[key as keyof typeof relationships]}
+                      />
                     ))}
                   </datalist>
                 </div>
-                <div className="grid gap-2">
+                {/* <div className="grid gap-2">
                   <Label htmlFor="medicalHistory">Medical History</Label>
-                  {/* Use textarea for medical history */}
                   <textarea
                     id="medicalHistory"
-                    name="medicalHistory" // Add name attribute
-                    value={formData.medicalHistory || ""} // Handle null case
-                    onChange={handleChange} // Add onChange handler
+                    name="medicalHistory" 
+                    value={formData.medicalHistory || ""} 
+                    onChange={handleChange}
                     placeholder="Tell us about your medical history"
                     className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" // Basic styling
                   />
-                </div>
+                </div> */}
               </div>
             </TabsContent>
           </Tabs>
@@ -205,9 +246,17 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({ profile, onSucces
           {error && <p className="text-sm text-red-500">{error}</p>}
           <DialogFooter>
             {/* Add Cancel button */}
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>Cancel</Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Saving...' : 'Save changes'} {/* Show loading state */}
+              {isLoading ? "Saving..." : "Save changes"}{" "}
+              {/* Show loading state */}
             </Button>
           </DialogFooter>
         </form>

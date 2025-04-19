@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { relationships } from '@/lib/relationship';
+import { relationships } from '@/lib/constant';
 
 export default function ProfileForm({ profile, open, onClose, onSuccess }: { profile: Profile | undefined, open: boolean, onClose: () => void, onSuccess: () => void }) {
   const [formData, setFormData] = useState<Profile>(profile || {
@@ -55,7 +55,7 @@ export default function ProfileForm({ profile, open, onClose, onSuccess }: { pro
                 value={formData.name}
                 onChange={handleChange}
                 className="col-span-3"
-                placeholder="Enter profile name"
+                placeholder="Nhập họ và tên"
               />
             </div>
             {/* <div className="grid grid-cols-4 items-center gap-4">
@@ -95,7 +95,7 @@ export default function ProfileForm({ profile, open, onClose, onSuccess }: { pro
                 value={formData.age}
                 onChange={handleChange}
                 className="col-span-3"
-                placeholder="Enter age"
+                placeholder="Nhập tuổi"
                 required
               />
             </div>
@@ -107,7 +107,7 @@ export default function ProfileForm({ profile, open, onClose, onSuccess }: { pro
                 value={formData.relationship}
                 onChange={handleChange}
                 className="col-span-3"
-                placeholder="Enter relationship status"
+                placeholder={Object.values(relationships).join(',')}
                 list="relationship-options"
               />
               <datalist id="relationship-options">
@@ -116,7 +116,7 @@ export default function ProfileForm({ profile, open, onClose, onSuccess }: { pro
                 ))}
               </datalist>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
+            {/* <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="medicalHistory" className="text-right">Medical History</Label>
               <textarea
                 id="medicalHistory"
@@ -126,7 +126,7 @@ export default function ProfileForm({ profile, open, onClose, onSuccess }: { pro
                 className="col-span-3"
                 placeholder="Enter medical history"
               />
-            </div>
+            </div> */}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => onClose()}>Cancel</Button>

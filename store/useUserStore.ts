@@ -15,7 +15,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   email: null,
   setUser: (userId, email) => set({ userId, email }),
   syncUserWithFirestore: async () => {
-    const userId = useUser().user?.id || null;
+    const userId = useUser().user!.id || null;
     const email = useUser().user?.emailAddresses?.[0]?.emailAddress || null;
 
     if (!userId || !email) {

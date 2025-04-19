@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { ChatHistoryItem } from "./ChatHistoryItem";
+import { useI18n } from "@/app/[locale]/i18n";
 
 const ChatHistoryList = ({
   chatSessions,
@@ -15,6 +16,7 @@ const ChatHistoryList = ({
   chatSessions: ChatSession[];
   chatSessionId?: string | null;
 }) => {
+  const t = useI18n()
   const [searchQuery, setSearchQuery] = useState("");
 
   const groupChat = () => {
@@ -33,7 +35,7 @@ const ChatHistoryList = ({
     <>
       <div className="relative mb-4">
         <Input
-          placeholder="Search..."
+          placeholder={t('common.search')+'...'}
           className="pl-10 pr-4 py-2 rounded-lg"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -58,7 +60,7 @@ const ChatHistoryList = ({
           Create New Private Chat
         </Button> */}
 
-      <ScrollArea className="flex-1">
+      <ScrollArea>
         {groupChat().map(({ key, chats }) => {
           return (
             <div key={key}>

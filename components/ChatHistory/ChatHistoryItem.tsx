@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChatSession } from "@prisma/client";
 import Link from "next/link";
+import { useI18n } from "@/app/[locale]/i18n";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 export function ChatHistoryItem({
   chat,
@@ -13,6 +20,7 @@ export function ChatHistoryItem({
   chat: Partial<ChatSession>;
   selected: boolean;
 }) {
+  const t = useI18n();
   return (
     <Link
       href={`/chat/${chat.id}`}
@@ -30,22 +38,41 @@ export function ChatHistoryItem({
         <span className="font-medium text-sm truncate">{chat.name}</span>
 
         <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 focus:bg-gray-300"
-          >
-            <Edit3 className="h-4 w-4" />
-            <span className="sr-only">Share</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 focus:bg-gray-300"
-          >
-            <Trash2 className="h-4 w-4" />
-            <span className="sr-only">Delete</span>
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 focus:bg-gray-300"
+                >
+                  <Edit3 className="h-4 w-4" />
+                  <span className="sr-only">{t("common.edit")}</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t("ChatHistoryItem.editButton")}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 focus:bg-gray-300"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span className="sr-only">{t("common.delete")}</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t("ChatHistoryItem.deleteButton")}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </Link>

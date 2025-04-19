@@ -2,12 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { Menu, PlusCircle, X } from "lucide-react";
-import { ChatHistorySheet } from "@/components/ChatHistory/ChatHistory";
 import ProfileHeader from "../Profile/ProfileHeader";
 import Link from "next/link";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { ChatHistory } from "../ChatHistory/ChatHistory";
 
 interface CommonHeaderProps {
   className?: string;
@@ -48,7 +48,7 @@ export function CommonHeader({ className }: CommonHeaderProps) {
             </Link>
           </Button>
 
-          <ChatHistorySheet />
+          <ChatHistory />
           {/* <Button variant="ghost" size="icon">
           <Ghost className="h-5 w-5" />
           <span className="sr-only">AI Assistant</span>

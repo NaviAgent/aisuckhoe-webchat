@@ -19,8 +19,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import ProfileDisplay from "../Profile/ProfileDisplay";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { useI18n } from "@/app/[locale]/i18n";
+import Loading from "../ui/loading";
 
 const ChatProfileSwitcher = () => {
+  const t = useI18n();
   const { profiles, fetchProfiles } = useProfileListStore();
   const { profileId, setProfileId } = useProfileStore();
   // Keep selectedProfile state local to ProfileHeader for now
@@ -68,31 +77,37 @@ const ChatProfileSwitcher = () => {
     fetchProfiles();
   };
 
+  if (!selectedProfile) {
+    return <Loading></Loading>;
+  }
   return (
     <div className="relative">
       <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger asChild>
-          {/* Use ProfileDisplay for the trigger content */}
-          <Button
-            variant="ghost"
-            className="flex w-full items-center justify-start p-0 hover:bg-transparent"
-            disabled={!selectedProfile} // Disable trigger if no profile selected/loaded
-          >
-            <ProfileDisplay profile={selectedProfile} isMobile={true} />
-            {/* <span>Hỏi cho</span>
-            <span>
-              {selectedProfile?.relationship === "self"
-                ? "tôi"
-                : selectedProfile?.name}
-            </span> */}
-          </Button>
-        </DropdownMenuTrigger>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                {/* Use ProfileDisplay for the trigger content */}
+                <Button
+                  variant="ghost"
+                  className="flex w-full items-center justify-start p-0 hover:bg-transparent"
+                  disabled={!selectedProfile}
+                >
+                  <ProfileDisplay profile={selectedProfile} isMobile={true} />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t("ChatProfileSwitcher.profileSelect")}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
-        <DropdownMenuContent className="w-80" align="end">
+        <DropdownMenuContent className="w-80 bg-white rounded-lg" align="end">
           {/* Render Profile Switcher */}
           <DropdownMenuRadioGroup
             className="px-2"
-            value={selectedProfile?.id}
+            value={selectedProfile!.id}
             onValueChange={handleProfileChange}
           >
             {profiles.map((profile) => (
@@ -133,11 +148,14 @@ const ChatProfileSwitcher = () => {
               <Button asChild variant="ghost" className="w-full justify-start">
                 <Link href="/profiles/new">
                   <PlusCircle className="mr-2 h-4 w-4" />
-                  Thêm người thân
+                  {t("ChatProfileSwitcher.addProfileButton")}
                 </Link>
               </Button>
             ) : (
-              <ProfileCreateDialog onSuccess={handleSuccess} />
+              <ProfileCreateDialog
+                userId={selectedProfile!.ownerId}
+                onSuccess={handleSuccess}
+              />
             )}
           </div>
         </DropdownMenuContent>

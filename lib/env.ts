@@ -22,13 +22,18 @@ export const ENV = {
   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID:
     process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
   NEXT_PUBLIC_APP_LOGO:
-    "https://res.cloudinary.com/ivanistao/image/upload/t_Profile/v1740834460/aisuckhoe/logo/logo-light_a53s1a.png",
+    "https://asset.cloudinary.com/aisuckhoe/f489f98201dddb2c20f0dabadffbaea6",
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:
+    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  NEXT_PUBLIC_CLOUDINARY_API_KEY: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+
   // server env
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
   POSTGRESQL_URL: process.env.POSTGRESQL_URL,
   FIREBASE_ADMIN_CERT_PATH: process.env.FIREBASE_ADMIN_CERT_PATH,
-  REDIS_URL: process.env.REDIS_URL, // Added Redis URL
-  REDIS_TOKEN: process.env.REDIS_TOKEN, // Added Redis Token
+  REDIS_URL: process.env.REDIS_URL,
+  REDIS_TOKEN: process.env.REDIS_TOKEN,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };
 
 const clientEnvSchema = z.object({
@@ -44,17 +49,20 @@ const clientEnvSchema = z.object({
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: z.string(),
   NEXT_PUBLIC_FIREBASE_APP_ID: z.string(),
   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: z.string().optional(),
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_API_KEY: z.string(),
 });
 
 const serverEnvSchema = z.object({
   CLERK_SECRET_KEY: z.string(),
   POSTGRESQL_URL: z.string(),
   FIREBASE_ADMIN_CERT_PATH: z.string(),
-  REDIS_URL: z.string().url(), // Add Redis URL validation
-  REDIS_TOKEN: z.string().optional(), // Add Redis Token validation
+  REDIS_URL: z.string().url(),
+  REDIS_TOKEN: z.string().optional(),
+  CLOUDINARY_API_SECRET: z.string(),
 });
 
 // Validate env dựa trên môi trường
 const isServer = typeof window === "undefined";
 export const serverEnv = isServer ? serverEnvSchema.parse(ENV) : null;
-export const clientEnv = !isServer ? clientEnvSchema.parse(ENV) : null;
+export const clientEnv = clientEnvSchema.parse(ENV);

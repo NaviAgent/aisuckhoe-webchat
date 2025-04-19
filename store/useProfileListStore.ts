@@ -14,8 +14,8 @@ interface ProfileListState {
   fetchProfiles: () => Promise<void>;
   createProfile: (
     data: Omit<Profile, "id" | "createdAt" | "updatedAt" | "deletedAt">
-  ) => Promise<void>;
-  updateProfile: (id: string, data: Partial<Profile>) => Promise<void>;
+  ) => Promise<Profile>;
+  updateProfile: (id: string, data: Partial<Profile>) => Promise<Profile>;
   deleteProfile: (id: string) => Promise<void>;
 }
 
@@ -37,8 +37,10 @@ export const useProfileListStore = create<ProfileListState>((set, get) => ({
     try {
       const newProfile = await createProfile(data);
       set({ profiles: [...get().profiles, newProfile], isLoading: false });
+      return newProfile;
     } catch (error) {
       set({ error: error, isLoading: false });
+      throw error;
     }
   },
   updateProfile: async (id, data) => {
@@ -51,8 +53,10 @@ export const useProfileListStore = create<ProfileListState>((set, get) => ({
         ),
         isLoading: false,
       });
+      return updatedProfile;
     } catch (error) {
       set({ error: error, isLoading: false });
+      throw error;
     }
   },
   deleteProfile: async (id) => {

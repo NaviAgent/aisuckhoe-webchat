@@ -18,8 +18,10 @@ import ProfileDisplay from "./ProfileDisplay"; // Import new component
 import ProfileEditDialog from "./ProfileEditDialog"; // Import new component
 import ProfileCreateDialog from "./ProfileCreateDialog"; // Import new component
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"; // Keep Avatar imports if needed here
+import { useI18n } from "@/app/[locale]/i18n";
 
 const ProfileHeader = () => {
+  const t = useI18n();
   const { profiles, fetchProfiles } = useProfileListStore();
   const { profileId, setProfileId } = useProfileStore();
   // Keep selectedProfile state local to ProfileHeader for now
@@ -118,7 +120,9 @@ const ProfileHeader = () => {
           <DropdownMenuSeparator />
 
           {/* Render Profile Switcher */}
-          <p className="mb-2 px-2 text-sm font-medium">Switch Profile</p>
+          <p className="mb-2 px-2 text-sm font-medium">
+            {t("ProfileHeader.profileList")}
+          </p>
           <DropdownMenuRadioGroup
             className="px-2"
             value={selectedProfile?.id}
@@ -158,9 +162,9 @@ const ProfileHeader = () => {
           <DropdownMenuSeparator />
 
           {/* Render Create Profile Dialog Trigger and pass onSuccess handler */}
-          <div className="px-2 py-2">
+          {/* <div className="px-2 py-2">
             <ProfileCreateDialog onSuccess={handleSuccess} />
-          </div>
+          </div> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

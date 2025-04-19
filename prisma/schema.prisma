@@ -91,3 +91,27 @@ enum TRANSACTION_CATEGORY {
   TOKEN
   STORAGE
 }
+
+// ===== File Asset =====
+model FileAsset {
+  id                 String    @id @default(cuid())
+  cloudinaryPublicId String    @unique
+  fileName           String
+  format             String
+  resourceType       String    
+  sizeBytes          Int
+  width              Int?
+  height             Int?
+  url                String
+  secureUrl          String
+  altText            String?
+  caption            String?
+  tags               String[]  @default([])
+  ownerId            String    
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+
+  @@index([ownerId, createdAt(sort: Desc)])
+  @@index([deletedAt])
+}

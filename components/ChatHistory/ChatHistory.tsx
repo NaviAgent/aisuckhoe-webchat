@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ClockIcon } from "lucide-react";
+import { Clock, ClockIcon } from "lucide-react";
 
 import { useProfileListStore } from "@/store/useProfileListStore";
 import { useProfileStore } from "@/store/useProfileStore";
@@ -27,15 +27,42 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { useI18n } from "@/app/[locale]/i18n";
+import ChatHistoryLists from "./ChatHistoryLists";
+import { ChatSession } from "@prisma/client";
 
-export function ChatHistorySheet() {
+export function ChatHistory() {
+  const t = useI18n();
   const { profiles, fetchProfiles } = useProfileListStore();
   const { profileId, setProfileId } = useProfileStore();
-  const { chatSessions, fetchChatSessions } = useChatSessionListStore();
+  const {
+    chatSessions,
+    isLoading: isLoadingChatSessions,
+    fetchChatSessions,
+    deleteChatSession,
+    updateChatSession,
+  } = useChatSessionListStore();
   const { chatSessionId } = useChatSessionStore();
 
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+
+  // Updated onEdit to accept newName and call updateChatSession
+  const handleSave = (chatId: string, newName: string) => {
+    console.log("[ChatHistory] edit", chatId, newName);
+    updateChatSession(chatId, { name: newName }); // Update the session name
+  };
+
+  const hanldeDelete = (chatId: string) => {
+    console.log("[ChatHistory] delete", chatId);
+    deleteChatSession(chatId);
+  };
 
   // Fetch profiles from API
   useEffect(() => {
@@ -140,12 +167,27 @@ export function ChatHistorySheet() {
 
   return isMobile ? (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="[&_svg]:size-6">
-          <ClockIcon></ClockIcon>
-          <span className="sr-only">History</span>
-        </Button>
-      </SheetTrigger>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full [&_svg]:size-6"
+              >
+                <Clock></Clock>
+                <span className="sr-only">
+                  {t("ChatHistorySheet.historyButton")}
+                </span>
+              </Button>
+            </SheetTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{t("ChatHistorySheet.historyButtonAlt")}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       <SheetContent side="bottom" className="h-[95vh] rounded-t-xl px-6">
         <SheetHeader className="flex items-center justify-center pb-2">
@@ -157,11 +199,18 @@ export function ChatHistorySheet() {
           <SheetDescription className="flex items-center justify-center pb-2"></SheetDescription>
         </VisuallyHidden>
 
-        <ChatHistoryList
+        {/* <ChatHistoryList
           key="for-sheet"
           chatSessions={chatSessions}
           chatSessionId={chatSessionId}
-        ></ChatHistoryList>
+        ></ChatHistoryList> */}
+        <ChatHistoryLists.Provider onDelete={hanldeDelete} onSave={handleSave}>
+          <ChatHistoryLists.List
+            chatSessions={chatSessions}
+            chatSessionId={chatSessionId}
+          />
+        </ChatHistoryLists.Provider>
+
         {/* <div className="space-y-6 overflow-y-auto pb-20">
         {filteredHistory.map(
           (section) =>
@@ -206,12 +255,27 @@ export function ChatHistorySheet() {
     </Sheet>
   ) : (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-9 w-9">
-          <ClockIcon></ClockIcon>
-          <span className="sr-only">History</span>
-        </Button>
-      </DialogTrigger>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full [&_svg]:size-6"
+              >
+                <ClockIcon></ClockIcon>
+                <span className="sr-only">
+                  {t("ChatHistorySheet.historyButton")}
+                </span>
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{t("ChatHistorySheet.historyButtonAlt")}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       <DialogContent className="flex flex-col h-[80vh] rounded-xl sm:rounded-xl px-6">
         <DialogHeader className="flex items-center justify-center pb-2">
@@ -223,13 +287,19 @@ export function ChatHistorySheet() {
           <DialogDescription></DialogDescription>
         </VisuallyHidden>
 
-        <div className="flex-1">
-          <ChatHistoryList
-            key="for-dialog"
+        {/* <ChatHistoryList
+          key="for-dialog"
+          chatSessions={chatSessions}
+          chatSessionId={chatSessionId}
+        ></ChatHistoryList> */}
+
+        <ChatHistoryLists.Provider onDelete={hanldeDelete} onSave={handleSave}>
+          <ChatHistoryLists.List
             chatSessions={chatSessions}
             chatSessionId={chatSessionId}
-          ></ChatHistoryList>
-        </div>
+            isLoading={isLoadingChatSessions}
+          />
+        </ChatHistoryLists.Provider>
       </DialogContent>
     </Dialog>
   );
