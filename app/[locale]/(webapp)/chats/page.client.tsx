@@ -6,9 +6,9 @@ import CommonFooter from "@/components/Common/CommonFooter"; // Import CommonFoo
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 // import { Badge } from '@/components/ui/badge'; // Badge might not be needed if unread count isn't available
-import { Pencil, PlusCircle, PlusSquare, Search } from "lucide-react"; // Removed Pin, VolumeX as they might not be in ChatSession
+import { PlusCircle, Search } from "lucide-react"; // Removed Pin, VolumeX as they might not be in ChatSession
 import { useChatSessionListStore } from "@/store/useChatSessionListStore";
 import { groupByTimePeriods } from "@/lib/utils";
 import { ChatSession } from "@prisma/client"; // Assuming ChatSession type is available
@@ -108,7 +108,7 @@ export default function ChatsPageClient() {
           )}
           {groupedAndFilteredChats.length === 0 && searchTerm && (
             <p className="p-4 text-center text-muted-foreground">
-              No chats found matching "{searchTerm}".
+              No chats found matching {searchTerm}.
             </p>
           )}
           {groupedAndFilteredChats.map(({ key, chats }) => (

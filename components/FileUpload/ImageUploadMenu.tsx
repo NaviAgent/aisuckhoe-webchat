@@ -15,19 +15,18 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { useI18n } from "@/app/[locale]/i18n";
+import { FileAsset } from "@prisma/client";
 
 // Define the props for FileUploadMenu
 interface FileUploadMenuProps {
-  onUploadSuccess?: (result: any) => void; // Callback after successful upload and DB save
-  onFileSelect?: (file: any) => void; // Callback when a file is selected from the library
+  onUploadSuccess?: (result: FileAsset) => void; // Callback after successful upload and DB save
+  onFileSelect?: (file: FileAsset) => void; // Callback when a file is selected from the library
   folder?: string; // Optional folder to upload to
   ownerId: string; // Optional owner ID for the file
 }
 
 export function ImageUploadMenu({
   onUploadSuccess,
-  onFileSelect,
-  folder,
   ownerId,
 }: FileUploadMenuProps) {
   const t = useI18n();
@@ -62,7 +61,10 @@ export function ImageUploadMenu({
         onUploadSuccess?.(saveResult.data); // Pass the DB record back
         // Optionally close library or menu if open
       } else {
-        console.error("[ImageUploadMenu] Failed to save FileAsset:", saveResult.error);
+        console.error(
+          "[ImageUploadMenu] Failed to save FileAsset:",
+          saveResult.error
+        );
         // Handle error (e.g., show a notification)
       }
     }

@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { ChatSession } from "@prisma/client";
 import { Search, Trash2, Edit3, Check, X, Loader2 } from "lucide-react"; // Added Check and X icons
-import { groupByTimePeriods, groupByTimePeriodsType, TimePeriodGroupType } from "@/lib/utils"; // Added util
+import { groupByTimePeriods, TimePeriodGroupType } from "@/lib/utils"; // Added util
 import { ScrollArea } from "@/components/ui/scroll-area"; // Added ui component
 import { Input } from "@/components/ui/input"; // Added ui component
 import { Button } from "@/components/ui/button"; // Added ui component

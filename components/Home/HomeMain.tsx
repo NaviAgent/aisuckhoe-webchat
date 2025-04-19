@@ -1,13 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Paperclip,
-  Send,
-  ChevronDown,
-  ImagePlus,
-  Maximize2,
-} from "lucide-react";
+import { Send, Maximize2 } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useProfileListStore } from "@/store/useProfileListStore";
@@ -36,14 +30,12 @@ import {
 // import { FileAsset } from "@prisma/client";
 // import { deleteFileAsset } from "@/services/fileAssetService";
 import { FilePreview } from "../FileUpload/FilePreview";
-import { convertArrayToObject } from "@/lib/convertArrayToObject";
-import { FileChoose } from "../FileUpload/FileChoose";
 
 interface HomeMainProps {
   userId: string;
 }
 
-export function HomeMain({ userId }: HomeMainProps) {
+export function HomeMain({}: HomeMainProps) {
   const t = useI18n();
   const router = useRouter(); // Initialize router
   const { profileId } = useProfileStore();
@@ -69,18 +61,18 @@ export function HomeMain({ userId }: HomeMainProps) {
   //   });
   // };
 
-  const handleChoose = (files: File[]) => {
-    // Avoid adding duplicates
-    setFiles((prevFiles) => {
-      const preFileMap = convertArrayToObject(prevFiles);
-      const newFiles = files.filter((f) => !preFileMap[f.name]);
-      if (newFiles.length > 0) {
-        return [...prevFiles, ...newFiles];
-      } else {
-        return prevFiles;
-      }
-    });
-  };
+  // const handleChoose = (files: File[]) => {
+  //   // Avoid adding duplicates
+  //   setFiles((prevFiles) => {
+  //     const preFileMap = convertArrayToObject(prevFiles);
+  //     const newFiles = files.filter((f) => !preFileMap[f.name]);
+  //     if (newFiles.length > 0) {
+  //       return [...prevFiles, ...newFiles];
+  //     } else {
+  //       return prevFiles;
+  //     }
+  //   });
+  // };
 
   // Handler to remove a file
   const handleRemoveFile = (file: File) => {

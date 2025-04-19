@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CldImage } from "next-cloudinary";
 import type { FileAsset } from "@prisma/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -12,21 +12,21 @@ interface FileListProps {
 }
 
 // This is a Server Component - it fetches data directly
-export async function FileList({
-  onFileSelect,
-  selectedFileId,
-}: FileListProps) {
+export function FileList({ onFileSelect, selectedFileId }: FileListProps) {
   const { user } = useUser();
+  const [files, setFiles] = useState<FileAsset[]>([]);
 
-  const { data: files } = await getFileAssets(user!.id);
+  const getFiles = async (userId: string) => {
+    if (user) {
+      const { data } = await getFileAssets(userId);
+      if (!data) return;
+      setFiles(data);
+    }
+  };
 
-  if (!files || files.length === 0) {
-    return (
-      <p className="p-4 text-center text-sm text-muted-foreground">
-        No files found in library.
-      </p>
-    );
-  }
+  useEffect(() => {
+    if (user) getFiles(user.id);
+  }, [user]);
 
   // Note: The onFileSelect prop passed from a Client Component to a Server Component
   // cannot be directly invoked here as a function due to serialization boundaries.

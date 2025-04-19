@@ -12,8 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'; // Corrected import path if needed, but should be fine now
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, Star, Zap, ShieldCheck, Cloud, History } from 'lucide-react'; // Example icons
+import { Star, Zap, ShieldCheck, Cloud, History } from 'lucide-react'; // Example icons
 
 interface PremiumSheetProps {
   open: boolean;
@@ -102,7 +101,7 @@ export function PremiumSheet({ open, onOpenChange }: PremiumSheetProps) {
 
           {/* Features List */}
           <div>
-            <h3 className="mb-3 text-sm font-semibold uppercase text-muted-foreground">What's Included</h3>
+            <h3 className="mb-3 text-sm font-semibold uppercase text-muted-foreground">What is Included</h3>
             <div className="space-y-3">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">

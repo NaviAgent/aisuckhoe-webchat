@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, forwardRef, useRef } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import type { BubbleProps } from "@ivannguyendev/flowise-embed";
 import Loading from "./ui/loading";
 import { useFlowiseChatbot } from "@/contexts/FlowiseChatbotContext";
@@ -16,7 +16,7 @@ export interface FlowiseChatbotHandle {
 }
 
 const FlowiseChatbot = forwardRef<FlowiseChatbotHandle, Props>(
-  ({ style, className, ...assignableProps }, ref) => {
+  ({ style, className, ...assignableProps }) => {
     // Destructure onReady
     const { setReady, chatRef } = useFlowiseChatbot();
     const [isLoading, setIsLoading] = useState(true);

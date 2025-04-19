@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"; // Import useRouter
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PlusIcon, SearchIcon, UserPlusIcon } from "lucide-react";
+import { PlusIcon, SearchIcon } from "lucide-react";
 import CommonLayout from "@/components/Common/CommonLayout";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";

@@ -22,6 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { Select } from "../ui/select";
 
 interface ProfileEditDialogProps {
   profile: Profile | undefined;
@@ -55,6 +56,7 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLTextAreaElement>
+      | { target: { name: string; value: string } }
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) =>
@@ -133,7 +135,7 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Make changes to your profile here. Click save when you are done.
           </DialogDescription>
         </DialogHeader>
         {/* Wrap content in a form */}
@@ -179,12 +181,13 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
                 <div className="grid gap-2">
                   <Label htmlFor="gender">Gender</Label>
                   {/* Use select for gender */}
-                  <select
-                    id="gender"
+                  <Select
+                    // id="gender"
                     name="gender"
                     value={formData.gender}
-                    onChange={handleChange}
-                    className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" // Basic styling
+                    onValueChange={(value) =>
+                      handleChange({ target: { name: "gender", value } })
+                    }
                     required
                   >
                     <option value="">Select Gender</option>
@@ -192,7 +195,7 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>{" "}
                     {/* Added Other option */}
-                  </select>
+                  </Select>
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="age">Age</Label>

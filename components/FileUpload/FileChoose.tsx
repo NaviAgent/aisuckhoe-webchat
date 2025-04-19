@@ -63,9 +63,9 @@ const FileChoose = React.forwardRef<HTMLDivElement, FileChooseProps>(
         const fileList = event.target.files;
         if (!fileList) return;
 
-        let chosenFiles = Array.from(fileList);
+        const chosenFiles = Array.from(fileList);
         let validFiles: File[] = [];
-        let errors: string[] = [];
+        const errors: string[] = [];
 
         // Limit number of files early if maxFiles is set
         if (maxFiles !== undefined && chosenFiles.length > maxFiles) {
@@ -73,8 +73,10 @@ const FileChoose = React.forwardRef<HTMLDivElement, FileChooseProps>(
           // Optionally, slice the array to the max number allowed
           // chosenFiles = chosenFiles.slice(0, maxFiles);
           // For now, we just reject the whole batch if too many are selected initially
-          console.warn(`Error: Cannot select more than ${maxFiles} file(s). Selected ${chosenFiles.length}.`);
-           // Reset input value
+          console.warn(
+            `Error: Cannot select more than ${maxFiles} file(s). Selected ${chosenFiles.length}.`
+          );
+          // Reset input value
           if (inputRef.current) {
             inputRef.current.value = "";
           }
@@ -82,15 +84,18 @@ const FileChoose = React.forwardRef<HTMLDivElement, FileChooseProps>(
           return; // Stop processing
         }
 
-
         chosenFiles.forEach((file) => {
           let fileIsValid = true;
           // Validate format
-          const [fileSchema, fileExtension] = file.type.split('/')
+          const fileExtension = file.type.split("/").pop();
           if (allowFormat && allowFormat.length > 0) {
-            const lowerCaseAllowFormat = allowFormat.map(ext => ext.toLowerCase());
-            if (!lowerCaseAllowFormat.includes(fileExtension || '')) {
-              errors.push(`Error: File "${file.name}" has an invalid format (${fileExtension}). Allowed formats: ${allowFormat.join(", ")}`);
+            const lowerCaseAllowFormat = allowFormat.map((ext) =>
+              ext.toLowerCase()
+            );
+            if (!lowerCaseAllowFormat.includes(fileExtension || "")) {
+              errors.push(
+                `Error: File "${file.name}" has an invalid format (${fileExtension}). Allowed formats: ${allowFormat.join(", ")}`
+              );
               fileIsValid = false;
             }
           }
@@ -98,7 +103,9 @@ const FileChoose = React.forwardRef<HTMLDivElement, FileChooseProps>(
           // Validate size
           if (maxFileSize !== undefined && file.size > maxFileSize) {
             const maxSizeMB = (maxFileSize / (1024 * 1024)).toFixed(2);
-            errors.push(`Error: File "${file.name}" exceeds the maximum size limit of ${maxSizeMB} MB.`);
+            errors.push(
+              `Error: File "${file.name}" exceeds the maximum size limit of ${maxSizeMB} MB.`
+            );
             fileIsValid = false;
           }
 
@@ -110,11 +117,14 @@ const FileChoose = React.forwardRef<HTMLDivElement, FileChooseProps>(
         // Check maxFiles again after validation (in case some were filtered out)
         // This logic might be redundant if we reject upfront, but kept for clarity
         if (maxFiles !== undefined && validFiles.length > maxFiles) {
-           errors.push(`Error: Cannot select more than ${maxFiles} valid file(s).`);
-           console.warn(`Error: Cannot select more than ${maxFiles} valid file(s). Valid files found: ${validFiles.length}.`);
-           validFiles = validFiles.slice(0, maxFiles); // Keep only the allowed number
+          errors.push(
+            `Error: Cannot select more than ${maxFiles} valid file(s).`
+          );
+          console.warn(
+            `Error: Cannot select more than ${maxFiles} valid file(s). Valid files found: ${validFiles.length}.`
+          );
+          validFiles = validFiles.slice(0, maxFiles); // Keep only the allowed number
         }
-
 
         if (errors.length > 0) {
           // Handle errors (e.g., display notifications to the user)
@@ -150,7 +160,11 @@ const FileChoose = React.forwardRef<HTMLDivElement, FileChooseProps>(
 
     return (
       <div ref={ref} className={cn("inline-block", className)} {...props}>
-        <Trigger onClick={triggerClick} disabled={disabled} aria-disabled={disabled}>
+        <Trigger
+          onClick={triggerClick}
+          disabled={disabled}
+          aria-disabled={disabled}
+        >
           {children ? (
             children // Render provided children
           ) : (

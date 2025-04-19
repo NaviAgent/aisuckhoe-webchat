@@ -1,12 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, PlusCircle } from "lucide-react";
-import ProfileHeader from "../Profile/ProfileHeader";
+import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { SidebarTrigger } from "../ui/sidebar";
 import {
   Tooltip,
   TooltipContent,

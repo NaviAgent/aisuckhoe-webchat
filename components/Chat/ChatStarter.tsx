@@ -2,15 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { Button } from "@/components/ui/button";
-import { FileAsset } from "@prisma/client"; // Import FileAsset type
-import {
-  Paperclip,
-  Send,
-  ImagePlus,
-  Maximize2,
-  FileIcon,
-  X,
-} from "lucide-react"; // Add FileIcon and X
+import { Send, Maximize2 } from "lucide-react"; // Add FileIcon and X
 import { Textarea } from "../ui/textarea";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useProfileListStore } from "@/store/useProfileListStore";
@@ -38,14 +30,11 @@ import {
 import { FilePreview } from "../FileUpload/FilePreview"; // Import FilePreview
 // import { ImageUploadMenu } from "../FileUpload/ImageUploadMenu";
 // import { deleteFileAsset } from "@/services/fileAssetService";
-import { FileChoose } from "../FileUpload/FileChoose";
-import { convertArrayToObject } from "@/lib/convertArrayToObject";
-
 interface ChatStarterProps {
   userId: string;
 }
 
-export function ChatStarter({ userId }: ChatStarterProps) {
+export function ChatStarter({}: ChatStarterProps) {
   const t = useI18n(); // Initialize the hook
   const router = useRouter(); // Initialize router
   const { profileId } = useProfileStore();
@@ -71,18 +60,18 @@ export function ChatStarter({ userId }: ChatStarterProps) {
   //   });
   // };
 
-  const handleChoose = (files: File[]) => {
-    // Avoid adding duplicates
-    setFiles((prevFiles) => {
-      const preFileMap = convertArrayToObject(prevFiles);
-      const newFiles = files.filter((f) => !preFileMap[f.name]);
-      if (newFiles.length > 0) {
-        return [...prevFiles, ...newFiles];
-      } else {
-        return prevFiles;
-      }
-    });
-  };
+  // const handleChoose = (files: File[]) => {
+  //   // Avoid adding duplicates
+  //   setFiles((prevFiles) => {
+  //     const preFileMap = convertArrayToObject(prevFiles);
+  //     const newFiles = files.filter((f) => !preFileMap[f.name]);
+  //     if (newFiles.length > 0) {
+  //       return [...prevFiles, ...newFiles];
+  //     } else {
+  //       return prevFiles;
+  //     }
+  //   });
+  // };
 
   // Handler to remove a file
   const handleRemoveFile = (file: File) => {

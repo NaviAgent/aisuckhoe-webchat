@@ -1,5 +1,5 @@
 import { motion, useAnimation } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 
@@ -28,7 +28,7 @@ export default function LogoAura({
   const controls2 = useAnimation();
   const controls3 = useAnimation();
 
-  const [autoPulse, setAutoPulse] = useState(true);
+  // const [autoPulse, setAutoPulse] = useState(true);
 
   const glowColor = colorMap[status];
   const ringClass = ringColors[status];

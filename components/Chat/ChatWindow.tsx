@@ -37,7 +37,7 @@ const ChatWindow = ({
   chatHistory,
   saveChatHistory,
 }: ChatWindowProps) => {
-  const { isReady, chatRef, sendMessage } = useFlowiseChatbot();
+  const { isReady, sendMessage } = useFlowiseChatbot();
   const { message, images, reset } = useDraftMessage();
   // chatRef is no longer needed for the component itself
   const logoURL = `https://asset.cloudinary.com/aisuckhoe/f489f98201dddb2c20f0dabadffbaea6?${Math.floor(Date.now() / 100000)}`;
@@ -50,13 +50,13 @@ const ChatWindow = ({
   };
 
   const storageAdapter: StorageAdapter = {
-    async getMessages(chatflowid, chatId) {
+    async getMessages(_chatflowid, chatId) {
       return { chatHistory, chatId, lead: null };
     },
-    async removeMessages(chatflowid, chatId) {
+    async removeMessages(_chatflowid, chatId) {
       console.log("[ChatWindow] removeMessages", chatId);
     },
-    async saveMessages(chatflowid, { chatId, chatHistory, lead }) {
+    async saveMessages(_chatflowid, { chatId, chatHistory, lead }) {
       if (!chatHistory) return;
       saveChatHistory(chatId!, { chatHistory, lead });
     },
@@ -82,12 +82,12 @@ const ChatWindow = ({
       }
     },
     // The bot message stack has changed
-    observeMessages: (messages: string | boolean | object | MessageType[]) => {
+    observeMessages: () => {
       // console.log("[ChatWindow] observeMessages", { messages });
       // console.log({ messages });
     },
     // The bot loading signal changed
-    observeLoading: (loading: string | boolean | object | MessageType[]) => {
+    observeLoading: () => {
       // console.log({ loading });
     },
   };

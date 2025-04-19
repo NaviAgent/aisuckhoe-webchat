@@ -16,7 +16,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useProfileListStore } from "@/store/useProfileListStore";
 import ProfileDisplay from "./ProfileDisplay"; // Import new component
 import ProfileEditDialog from "./ProfileEditDialog"; // Import new component
-import ProfileCreateDialog from "./ProfileCreateDialog"; // Import new component
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"; // Keep Avatar imports if needed here
 import { useI18n } from "@/app/[locale]/i18n";
 

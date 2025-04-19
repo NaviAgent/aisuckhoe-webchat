@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { clerkClient } from "@clerk/nextjs/server";
-import { prisma } from "@/lib/prisma"; // Use the initialized Prisma client
 import { Membership, TRANSACTION_CATEGORY, TRANSACTION_TYPE } from "@prisma/client"; // Import Enums
 import { sumAmountByCategoryUpdateCache } from "@/lib/prisma/transaction.service";
+import prisma from "@/lib/prisma/client";
 
 // --- Configuration ---
 // TODO: Replace this placeholder map with actual package details,
@@ -241,7 +241,7 @@ export async function POST(req: NextRequest) {
       message: "Membership created successfully",
       membershipId: newMembership.id,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Webhook Processing Error:", error);
 
     // Log specific error details if available

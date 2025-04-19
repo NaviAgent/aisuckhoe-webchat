@@ -22,11 +22,11 @@ function useTextareaEditorContext() {
   return ctx;
 }
 
-const TextareaEditorRoot: React.FC<
-  {
-    ref?: React.Ref<HTMLDivElement>;
-  } & React.AllHTMLAttributes<HTMLDivElement>
-> = ({ className, ref, children, ...props }) => {
+const TextareaEditorRoot: React.FC<React.AllHTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...props
+}) => {
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
   const glowClass =
@@ -89,7 +89,10 @@ const TextareaEditorFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
 }) => {
   return (
     <div
-      className={cn("flex items-center justify-between p-2  bg-background/80 ", className)}
+      className={cn(
+        "flex items-center justify-between p-2  bg-background/80 ",
+        className
+      )}
       {...props}
     >
       {children}

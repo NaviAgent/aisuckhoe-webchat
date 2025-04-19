@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { genders, relationships } from "@/lib/constant"; // Import relationships
 import { useProfileListStore } from "@/store/useProfileListStore";
 import { useProfileStore } from "@/store/useProfileStore";
@@ -24,12 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import {
-  CldUploadWidget,
-  CloudinaryUploadWidgetInfo,
-  CloudinaryUploadWidgetResults,
-} from "next-cloudinary";
-import { destroyFileAsset } from "@/services/fileAssetService";
+import { Select } from "../ui/select";
 
 interface ProfileCreateDialogProps {
   userId: string;
@@ -62,15 +56,13 @@ const ProfileCreateDialog: React.FC<ProfileCreateDialogProps> = ({
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // Add loading state
   const [error, setError] = useState<string | null>(null); // Add error state
-  const [avatarFile, setAvatarFile] =
-    useState<CloudinaryUploadWidgetInfo | null>(null); // Add loading state
-
   // Handle input changes
   const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLTextAreaElement>
+      | { target: { name: string; value: string } }
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -112,29 +104,6 @@ const ProfileCreateDialog: React.FC<ProfileCreateDialogProps> = ({
     }
     setOpen(isOpen);
   };
-
-  const handleUploadResult = async (result: CloudinaryUploadWidgetResults) => {
-    const uploadedResult = result.info;
-    if (
-      result.event === "success" &&
-      uploadedResult &&
-      typeof uploadedResult !== "string"
-    ) {
-      setAvatarFile((prevFile) => {
-        if (prevFile) {
-          destroyFileAsset(prevFile.public_id, prevFile.resource_type);
-        }
-        return uploadedResult;
-      });
-      formData.avatar = uploadedResult.url;
-    }
-  };
-
-  // Determine fallback character outside JSX
-  const fallbackChar =
-    typeof formData.name === "string" && formData.name.length > 0
-      ? formData.name.charAt(0).toUpperCase() // Use charAt(0)
-      : "?";
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
@@ -252,12 +221,12 @@ const ProfileCreateDialog: React.FC<ProfileCreateDialogProps> = ({
                 {t("ProfileCreateDialog.genderLabel")}
               </Label>
               {/* Use select for gender */}
-              <select
-                id="create-gender"
+              <Select
                 name="gender"
                 value={formData.gender}
-                onChange={handleChange}
-                className="col-span-3 flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" // Basic styling
+                onValueChange={(value) =>
+                  handleChange({ target: { name: "gender", value } })
+                }
                 required
               >
                 <option value="">
@@ -268,7 +237,7 @@ const ProfileCreateDialog: React.FC<ProfileCreateDialogProps> = ({
                     {t(`common.${key}`)}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="create-relationship" className="text-right">

@@ -18,7 +18,6 @@ import { useChatSessionListStore } from "@/store/useChatSessionListStore";
 import { useChatSessionStore } from "@/store/useChatSessionStore";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { useIsMobile } from "@/hooks/use-mobile";
-import ChatHistoryList from "./ChatHistoryList";
 import {
   Dialog,
   DialogContent,
@@ -35,7 +34,6 @@ import {
 } from "../ui/tooltip";
 import { useI18n } from "@/app/[locale]/i18n";
 import ChatHistoryLists from "./ChatHistoryLists";
-import { ChatSession } from "@prisma/client";
 
 export function ChatHistory() {
   const t = useI18n();

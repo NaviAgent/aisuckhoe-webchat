@@ -31,7 +31,6 @@ export function FileUploadLibrary({
   onOpenChange,
   onFileSelect,
   ownerId,
-  folder,
 }: FileUploadLibraryProps) {
   const [selectedFile, setSelectedFile] = useState<FileAsset | null>(null);
   const [activeTab, setActiveTab] = useState("all"); // Default to 'all' tab

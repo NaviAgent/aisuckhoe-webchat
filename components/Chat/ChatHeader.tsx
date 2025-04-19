@@ -1,14 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, PlusCircle, Settings } from "lucide-react"; // Added Settings icon
-import ProfileHeader from "../Profile/ProfileHeader";
+import { PlusCircle } from "lucide-react"; // Added Settings icon
 import Link from "next/link";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet"; // Added Sheet imports
-import ChatSetting from "@/components/Chat/ChatSetting"; // Added ChatSetting import
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { SidebarTrigger } from "../ui/sidebar";
 import { useI18n } from "@/app/[locale]/i18n";
 import {
   Tooltip,

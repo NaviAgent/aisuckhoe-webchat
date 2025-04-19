@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
@@ -20,7 +19,6 @@ import type { FileAsset } from "@prisma/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import dayjs from "dayjs"; // Import dayjs
 import { Trash2, Save, X, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import {
   deleteFileAsset,
   getFileAssetById,

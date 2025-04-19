@@ -1,11 +1,7 @@
 "use server";
 
 import { prisma } from "./client";
-import {
-  Transaction,
-  TRANSACTION_CATEGORY,
-  TRANSACTION_TYPE,
-} from "@prisma/client";
+import { Transaction, TRANSACTION_CATEGORY } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import redis from "@/lib/ioredis/server";
 
