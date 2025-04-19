@@ -1,7 +1,7 @@
 import z from "zod";
 
 // Schema cho client-side
-export const ENV = {
+const ENV = {
   // client env
   NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
   NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL:
@@ -26,6 +26,8 @@ export const ENV = {
   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:
     process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   NEXT_PUBLIC_CLOUDINARY_API_KEY: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET:
+    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
 
   // server env
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
@@ -51,6 +53,7 @@ const clientEnvSchema = z.object({
   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: z.string().optional(),
   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
   NEXT_PUBLIC_CLOUDINARY_API_KEY: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: z.string().optional(),
 });
 
 const serverEnvSchema = z.object({
@@ -64,5 +67,13 @@ const serverEnvSchema = z.object({
 
 // Validate env dựa trên môi trường
 const isServer = typeof window === "undefined";
-export const serverEnv = isServer ? serverEnvSchema.parse(ENV) : null;
-export const clientEnv = clientEnvSchema.parse(ENV);
+// export const serverEnv = isServer ? serverEnvSchema.parse(ENV) : null;
+// export const clientEnv = clientEnvSchema.parse(ENV);
+export const getClientEnv = () => {
+  return clientEnvSchema.parse(ENV);
+};
+
+export const getServerEnv = () => {
+  if (isServer) return serverEnvSchema.parse(ENV);
+  else throw new Error("Invalid env");
+};

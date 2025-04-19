@@ -1,11 +1,11 @@
 import canUseDOM from "./canUseDOM";
-import { clientEnv } from "./env";
+import { getClientEnv } from "./env";
 
 export const getServerSideURL = () => {
-  let url = clientEnv?.NEXT_PUBLIC_SERVER_URL;
+  let url = process.env?.NEXT_PUBLIC_SERVER_URL;
 
-  if (!url && clientEnv?.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${clientEnv.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;
+  if (!url && process.env?.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;
   }
 
   if (!url) {
@@ -23,6 +23,7 @@ export const getClientSideURL = () => {
 
     return `${protocol}//${domain}${port ? `:${port}` : ""}`;
   }
+  const clientEnv = getClientEnv();
 
   if (clientEnv?.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) {
     return `https://${clientEnv.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;

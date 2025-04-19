@@ -3,7 +3,7 @@
 import { prisma } from "./client";
 import { Transaction, TRANSACTION_CATEGORY } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
-import redis from "@/lib/ioredis/server";
+import { initRedis } from "@/lib/ioredis/server";
 
 /**
  * Creates a new transaction.
@@ -130,6 +130,7 @@ export async function sumAmountByCategory(
     throw new Error("User not authenticated");
   }
   try {
+    const redis = initRedis();
     const cache = await redis.hget(`${userId}:sum`, category);
     if (cache) return Number(cache);
     const transactions = await prisma.transaction.findMany({
@@ -165,6 +166,7 @@ export async function sumAmountByCategoryUpdateCache(
     throw new Error("User not authenticated");
   }
   try {
+    const redis = initRedis();
     const transactions = await prisma.transaction.findMany({
       where: {
         ownerId: userId,

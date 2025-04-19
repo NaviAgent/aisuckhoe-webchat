@@ -1,9 +1,11 @@
 import { v2 } from "cloudinary"; // Try default import
-import { clientEnv, serverEnv } from "../env";
-console.log(clientEnv, serverEnv)
+import { getClientEnv, getServerEnv } from "../env";
+
 // Configure Cloudinary (ensure environment variables are set)
 // Note: Ensure CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET are set in your .env
 export async function initCloudinary() {
+  const clientEnv = getClientEnv();
+  const serverEnv = getServerEnv();
   v2.config({
     // Access config via v2 property
     cloud_name: clientEnv!.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,

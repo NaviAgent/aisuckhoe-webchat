@@ -17,6 +17,7 @@ import { FileList } from "./FileList"; // Import the Server Component
 import type { FileAsset } from "@prisma/client";
 import { Skeleton } from "@/components/ui/skeleton"; // For Suspense fallback
 import { createFileAsset } from "@/services/fileAssetService";
+import { getClientEnv } from "@/lib/env";
 
 interface FileUploadLibraryProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ export function FileUploadLibrary({
   onFileSelect,
   ownerId,
 }: FileUploadLibraryProps) {
+  const clientEnv = getClientEnv();
   const [selectedFile, setSelectedFile] = useState<FileAsset | null>(null);
   const [activeTab, setActiveTab] = useState("all"); // Default to 'all' tab
 
@@ -133,7 +135,7 @@ export function FileUploadLibrary({
                   maxFiles: 5,
                   maxFileSize: 5000000, // 5MB
                 }}
-                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET} // Make sure preset is configured
+                uploadPreset={clientEnv.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET} // Make sure preset is configured
               >
                 <Button>Upload Files</Button>
               </CldUploadButton>

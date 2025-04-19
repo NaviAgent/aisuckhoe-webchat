@@ -2,12 +2,14 @@
 
 import { auth } from "@clerk/nextjs/server";
 import admin, { apps, credential } from "firebase-admin";
+import { getServerEnv } from "@/lib/env";
 
 (() => {
+  const serverEnv = getServerEnv()
   // Initialize Firebase
   return apps.length === 0
     ? admin.initializeApp({
-        credential: credential.cert(process.env.FIREBASE_ADMIN_CERT_PATH || ""),
+        credential: credential.cert(serverEnv.FIREBASE_ADMIN_CERT_PATH || ""),
       })
     : apps[0]!;
 })();

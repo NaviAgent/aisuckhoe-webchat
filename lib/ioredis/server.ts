@@ -1,6 +1,9 @@
-import Redis from 'ioredis';
-import { serverEnv } from '../env';
+import Redis from "ioredis";
 
-const redis = new Redis(serverEnv!.REDIS_URL);
+let redis: Redis;
 
-export default redis;
+export const initRedis = () => {
+  if (redis) return redis;
+  redis = new Redis(process.env.REDIS_URL || "");
+  return redis;
+};
