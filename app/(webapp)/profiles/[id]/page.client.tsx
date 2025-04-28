@@ -22,7 +22,7 @@ import { useDebounce } from "@/lib/useDebounce";
 import type { Profile, ChatSession } from "@prisma/client"; // Assuming Profile and ChatSession types exist
 import { formatDateTime } from "@/lib/formatDateTime"; // Assuming this utility exists for date formatting
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton for loading state
-import { useI18n } from "@/app/[locale]/i18n";
+import { useI18n } from "@/app/i18n";
 import { getProfileById } from "@/lib/prisma/profile.service";
 import Loading from "@/components/ui/loading";
 import { useProfileStore } from "@/store/useProfileStore";

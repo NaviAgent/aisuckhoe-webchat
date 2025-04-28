@@ -11,7 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { useI18n } from "@/app/[locale]/i18n";
+import { useI18n } from "@/app/i18n";
 import { ChatHistory } from "../ChatHistory/ChatHistory";
 
 interface HomeHeaderProps {

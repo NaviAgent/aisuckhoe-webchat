@@ -8,10 +8,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { updateUserMetadata } from "@/lib/clerk/user-service";
 import { useProfileListStore } from "@/store/useProfileListStore";
-import { useI18n } from "@/app/[locale]/i18n";
+import { useI18n } from "@/app/i18n";
+import { Select } from "@/components/ui/select";
 
 export default function Onboarding() {
-  const t = useI18n()
+  const t = useI18n();
   const { createProfile } = useProfileListStore();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,13 +33,17 @@ export default function Onboarding() {
     metadata: {},
   });
 
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
+  // const handleChange = (
+  //   e:
+  //     | React.ChangeEvent<HTMLInputElement>
+  //     | React.ChangeEvent<HTMLTextAreaElement>
+  //     | React.ChangeEvent<HTMLSelectElement>
+  // ) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
+  const handleChange = (name: string, value: string) => {
+    // const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
@@ -75,10 +80,10 @@ export default function Onboarding() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-6 space-y-6">
           <p className="font-bold text-center text-gray-800">
-            {t('onboarding.createDefaultProfile')}
+            {t("onboarding.createDefaultProfile")}
           </p>
           <h1 className="text-2xl font-bold text-center text-gray-800">
-            {t('onboarding.helloUser', { name: user?.fullName })}
+            {t("onboarding.helloUser", { name: user?.fullName })}
           </h1>
 
           {error && (
@@ -91,32 +96,34 @@ export default function Onboarding() {
             {/* Gender Selection */}
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">
-                {t('common.gender')}
+                {t("common.gender")}
               </Label>
-              <select
+              <Select
                 name="gender"
                 value={formData.gender}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-700"
+                onValueChange={(value) => handleChange("gender", value)}
+                // className="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-700"
                 required
               >
-                <option value="">{t('onboarding.selectGender')}</option>
-                <option value="Male">{t('common.male')}</option>
-                <option value="Female">{t('common.female')}</option>
-              </select>
+                <option value="">{t("onboarding.selectGender")}</option>
+                <option value="Male">{t("common.male")}</option>
+                <option value="Female">{t("common.female")}</option>
+              </Select>
             </div>
 
             {/* Age Scroll Picker */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">{t('common.age')}</Label>
+              <Label className="text-sm font-medium text-gray-700">
+                {t("common.age")}
+              </Label>
               <Input
                 id="age"
                 name="age"
                 type="number"
                 value={formData.age}
-                onChange={handleChange}
+                onChange={(e) => handleChange("age", e.target.value)}
                 className="col-span-3"
-                placeholder={t('onboarding.enterAgePlaceholder')}
+                placeholder={t("onboarding.enterAgePlaceholder")}
                 list="age-options"
               />
               <datalist id="age-options">
@@ -165,10 +172,10 @@ export default function Onboarding() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     />
                   </svg>
-                  {t('common.processing')}
+                  {t("common.processing")}
                 </div>
               ) : (
-                t('onboarding.createProfileButton')
+                t("onboarding.createProfileButton")
               )}
             </Button>
           </form>

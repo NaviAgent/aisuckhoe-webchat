@@ -17,7 +17,7 @@ import { useProfileListStore } from "@/store/useProfileListStore";
 import ProfileDisplay from "./ProfileDisplay"; // Import new component
 import ProfileEditDialog from "./ProfileEditDialog"; // Import new component
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"; // Keep Avatar imports if needed here
-import { useI18n } from "@/app/[locale]/i18n";
+import { useI18n } from "@/app/i18n";
 
 const ProfileHeader = () => {
   const t = useI18n();
