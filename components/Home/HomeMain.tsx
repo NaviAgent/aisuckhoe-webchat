@@ -19,7 +19,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { VisuallyHidden } from "../ui/visually-hidden";
-import { useI18n } from "@/app/i18n";
+import { useI18n } from "@/app/[locale]/i18n";
 import {
   Tooltip,
   TooltipContent,

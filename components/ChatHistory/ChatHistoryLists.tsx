@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input"; // Added ui component
 import { Button } from "@/components/ui/button"; // Added ui component
 import { cn } from "@/lib/utils"; // Added util
 import Link from "next/link"; // Added Link
-import { useI18n } from "@/app/i18n"; // Added i18n hook
+import { useI18n } from "@/app/[locale]/i18n"; // Added i18n hook
 import {
   Tooltip,
   TooltipContent,

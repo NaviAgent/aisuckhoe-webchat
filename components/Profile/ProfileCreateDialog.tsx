@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { genders, relationships } from "@/lib/constant"; // Import relationships
 import { useProfileListStore } from "@/store/useProfileListStore";
 import { useProfileStore } from "@/store/useProfileStore";
-import { useI18n } from "@/app/i18n";
+import { useI18n } from "@/app/[locale]/i18n";
 import {
   Tooltip,
   TooltipContent,

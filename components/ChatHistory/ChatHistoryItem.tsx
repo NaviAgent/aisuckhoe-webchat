@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChatSession } from "@prisma/client";
 import Link from "next/link";
-import { useI18n } from "@/app/i18n";
+import { useI18n } from "@/app/[locale]/i18n";
 import {
   Tooltip,
   TooltipContent,

@@ -55,6 +55,11 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./next.config.js
+
+# Copy the service account key and set the environment variable
+COPY --chown=nextjs:nodejs serviceAccountKey.json /opt/serviceAccountKey.json
+ENV FIREBASE_ADMIN_CERT_PATH=/opt/serviceAccountKey.json
+
 USER nextjs
 EXPOSE 3000
 ENV PORT 3000

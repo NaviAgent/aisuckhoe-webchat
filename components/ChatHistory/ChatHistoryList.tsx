@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { ChatHistoryItem } from "./ChatHistoryItem";
-import { useI18n } from "@/app/i18n";
+import { useI18n } from "@/app/[locale]/i18n";
 
 const ChatHistoryList = ({
   chatSessions,
