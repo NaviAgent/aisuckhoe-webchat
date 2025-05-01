@@ -16,8 +16,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useProfileListStore } from "@/store/useProfileListStore";
 import ProfileCreateDialog from "../Profile/ProfileCreateDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { PlusCircle } from "lucide-react";
-import Link from "next/link";
 import ProfileDisplay from "../Profile/ProfileDisplay";
 import {
   Tooltip,
