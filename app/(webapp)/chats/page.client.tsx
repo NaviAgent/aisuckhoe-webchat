@@ -60,11 +60,11 @@ export default function ChatsPageClient() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="default" className="text-lg">
-                {/* <Pencil className="h-5 w-5" /> */}
-                {/* <span>Edit</span> */}
-              </Button>
-              <h1 className="text-lg font-semibold">Chats</h1>
+              {/* <Button variant="ghost" size="default" className="text-lg">
+                <Pencil className="h-5 w-5" />
+                <span>Edit</span>
+              </Button> */}
+              {/* <h1 className="text-lg font-semibold">Chats</h1> */}
               <Button
                 asChild
                 variant="ghost"

@@ -7,7 +7,7 @@ import { mergeOpenGraph } from "@/lib/mergeOpenGraph";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { getServerSideURL } from "@/lib/getURL";
-import { getCurrentLocale } from "./i18n/server"; // Import server-side locale getter
+// import { getCurrentLocale } from "./i18n/server"; // Import server-side locale getter
 import I18nProvider from "./i18n/provider"; // Import the client provider
 
 // Make the component async to await getCurrentLocale
@@ -16,11 +16,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await getCurrentLocale(); // Await the locale
+  const locale = 'vi'
   return (
     <ClerkProvider>
       {/* Use the dynamic locale for the lang attribute */}
-      <html lang={locale || "vi"} suppressHydrationWarning>
+      <html lang={locale ?? "vi"} suppressHydrationWarning>
         {/* <GoogleTagManager gtmId={config.gtm.id} /> */}
         <head>
           <InitTheme />
@@ -29,7 +29,7 @@ export default async function RootLayout({
         </head>
         <body>
           {/* Wrap children with the I18nProvider */}
-          <I18nProvider locale={locale || "vi"}>{children}</I18nProvider>
+          <I18nProvider locale={locale ?? "vi"}>{children}</I18nProvider>
         </body>
       </html>
     </ClerkProvider>
