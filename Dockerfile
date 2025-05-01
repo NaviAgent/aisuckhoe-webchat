@@ -56,6 +56,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./next.config.js
 
+# Create /opt directory and grant write permissions to nextjs user
+RUN mkdir -p /opt && chown nextjs:nodejs /opt
+
 USER nextjs
 EXPOSE 3000
 ENV PORT 3000
