@@ -10,14 +10,14 @@ x-shared-env: &shared-api-worker-env
       NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:-}
       NEXT_PUBLIC_CLOUDINARY_API_KEY: ${NEXT_PUBLIC_CLOUDINARY_API_KEY:-}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-}
-      FIREBASE_ADMIN_CERT_PATH: ${FIREBASE_ADMIN_CERT_PATH:-/opt/serviceAccountKey.json} # Updated default path
+      FIREBASE_ADMIN_CERT_PATH: ${FIREBASE_ADMIN_CERT_PATH:-/opt/serviceAccountKey.json}
       NEXT_PUBLIC_FIREBASE_API_KEY: ${NEXT_PUBLIC_FIREBASE_API_KEY:-}
       NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:-}
       NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${NEXT_PUBLIC_FIREBASE_PROJECT_ID:-}
       NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:-}
       NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:-}
       NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID:-}
-      FIREBASE_SERVICE_ACCOUNT_KEY_JSON: ${FIREBASE_SERVICE_ACCOUNT_KEY_JSON:-} # Added service account key JSON
+      FIREBASE_SERVICE_ACCOUNT_KEY_JSON: ${FIREBASE_SERVICE_ACCOUNT_KEY_JSON:-}
       REDIS_URL: ${REDIS_URL:-rediss://username:password@localhost:21079}
 
 services:
@@ -27,9 +27,8 @@ services:
       - "3000:3000"
     environment:
       <<: *shared-api-worker-env
-      # Optionally override or add specific env vars for the server here
-      # Example: NODE_ENV: ${NODE_ENV:-development} # Override NODE_ENV for server
-    command: sh -c "echo \"$$FIREBASE_SERVICE_ACCOUNT_KEY_JSON\" > /opt/serviceAccountKey.json && HOSTNAME='0.0.0.0' node server.js" # Write key to file first
+      # Example: NODE_ENV: ${NODE_ENV:-development}
+    command: sh -c "echo \"$$FIREBASE_SERVICE_ACCOUNT_KEY_JSON\" > /opt/serviceAccountKey.json && HOSTNAME='0.0.0.0' node server.js"
 
   pgadmin:
     container_name: pgadmin

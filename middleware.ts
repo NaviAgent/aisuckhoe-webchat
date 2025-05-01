@@ -1,14 +1,18 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { authMiddleware } from "./middlewares/clerk.middleware";
 import { onboardingMiddleware } from "./middlewares/onboarding.middleware";
 import { createI18nMiddleware } from "next-international/middleware";
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const I18nMiddleware = createI18nMiddleware({
   locales: ["en", "vi"],
   defaultLocale: "vi",
   urlMappingStrategy: "rewrite", // Keeps locale in URL path e.g. /vi/chat
 });
+
+const isPublicRoute = createRouteMatcher([
+  "/auth/sign-in(.*)",
+  "/auth/sign-up(.*)",
+]);
 
 export default clerkMiddleware(
   async (auth, request: NextRequest, event: NextFetchEvent) => {
@@ -18,9 +22,8 @@ export default clerkMiddleware(
 
     // 2. Run auth middleware
     // Note: Clerk's authMiddleware might handle async internally or expect direct return
-    const authResult = await authMiddleware(request, event);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    if (!isPublicRoute(request)) {
+      await auth.protect();
     }
 
     // 3. If auth passed synchronously without returning a response, run onboarding
