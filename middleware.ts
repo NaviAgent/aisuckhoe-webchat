@@ -14,14 +14,12 @@ export default clerkMiddleware(
   async (auth, request: NextRequest, event: NextFetchEvent) => {
     // 1. Run i18n middleware first
     const i18nResponse = I18nMiddleware(request);
-    // If i18n redirects or rewrites, return its response
     if (i18nResponse) return i18nResponse;
 
     // 2. Run auth middleware
     // Note: Clerk's authMiddleware might handle async internally or expect direct return
     const authResult = await authMiddleware(request, event);
     if (authResult instanceof NextResponse) {
-      // If auth middleware returned a synchronous response
       return authResult;
     }
 
