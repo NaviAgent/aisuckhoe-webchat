@@ -16,8 +16,8 @@ export default {
     age: "Tuổi",
     processing: "Đang xử lý...",
     relationship: {
-      father: "Cha/Bố/Ba",
-      mother: "Mẹ/Má",
+      father: "Ba",
+      mother: "Mẹ",
       brother: "Anh/em trai",
       sister: "Chị/em gái",
       son: "Con trai",
@@ -150,6 +150,9 @@ export default {
     agePlaceholder: "Nhập tuổi",
     relationshipLabel: "Quan hệ",
     cancelButton: "Huỷ",
+    relationshipPlaceholder: "Chọn quan hệ",
+    selectGenderFirstPlaceholder: "Vui lòng chọn giới tính trước",
+    createButton: "Tạo",
   },
   ChatHistoryItem: {
     deleteButton: "Xoá hội thoại",

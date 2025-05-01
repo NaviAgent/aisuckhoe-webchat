@@ -144,19 +144,11 @@ const ChatProfileSwitcher = () => {
           <DropdownMenuSeparator />
           {/* Render Create Profile Dialog Trigger and pass onSuccess handler */}
           <div className="px-2 py-2">
-            {isMobile ? (
-              <Button asChild variant="ghost" className="w-full justify-start">
-                <Link href="/profiles/new">
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  {t("ChatProfileSwitcher.addProfileButton")}
-                </Link>
-              </Button>
-            ) : (
-              <ProfileCreateDialog
-                userId={selectedProfile!.ownerId}
-                onSuccess={handleSuccess}
-              />
-            )}
+            <ProfileCreateDialog
+              userId={selectedProfile!.ownerId}
+              onSuccess={handleSuccess}
+              fullscreen={isMobile}
+            />
           </div>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -147,7 +147,10 @@ export default {
     ageLabel: "Age",
     agePlaceholder: "Enter age",
     relationshipLabel: "Relationship",
-    cancelButton: 'Cancel'
+    cancelButton: 'Cancel',
+    relationshipPlaceholder: "Select relationship",
+    selectGenderFirstPlaceholder: "Select gender first",
+    createButton: 'Create',
   },
   ChatHistoryItem: {
     deleteButton: "Delete chat",

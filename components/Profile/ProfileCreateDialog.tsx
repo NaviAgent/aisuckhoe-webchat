@@ -1,5 +1,10 @@
-import React, { useState } from "react"; // Import useState
-import { Profile } from "@prisma/client"; // Import Profile type
+"use client"; // Add this directive
+
+import React, { useState, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Profile } from "@prisma/client";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,8 +17,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { genders, relationships } from "@/lib/constant"; // Import relationships
+import { ScrollArea } from "@/components/ui/scroll-area"; // Import ScrollArea
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { genders, relationships } from "@/lib/constant";
 import { useProfileListStore } from "@/store/useProfileListStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useI18n } from "@/app/i18n";
@@ -23,102 +43,167 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { Select } from "../ui/select";
+
+// Define Zod schema for validation
+const profileSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  age: z.coerce // Use coerce to convert string input to number
+    .number()
+    .int()
+    .min(0, { message: "Age must be 0 or greater" })
+    .max(120, { message: "Age must be 120 or less" }),
+  gender: z.string().min(1, { message: "Gender is required" }),
+  relationship: z.string().min(1, { message: "Relationship is required" }),
+  // medicalHistory: z.string().optional(), // Keep commented if not used
+  // avatar: z.string().optional(), // Keep commented if not used
+});
+
+type ProfileFormValues = z.infer<typeof profileSchema>;
 
 interface ProfileCreateDialogProps {
   userId: string;
-  onSuccess: (newProfile: Profile) => void; // Add onSuccess prop
+  onSuccess: (newProfile: Profile) => void;
+  fullscreen?: boolean; // Add optional fullscreen prop
 }
 
 const ProfileCreateDialog: React.FC<ProfileCreateDialogProps> = ({
   userId,
   onSuccess,
+  fullscreen = false, // Default fullscreen to false
 }) => {
   const t = useI18n();
   const { createProfile } = useProfileListStore();
   const { setProfileId } = useProfileStore();
-  // State for form data
-  const [formData, setFormData] = useState<
-    Omit<Profile, "id" | "createdAt" | "updatedAt" | "deletedAt">
-  >({
-    name: "",
-    avatar: null,
-    relationship: "",
-    ownerId: userId ?? "",
-    age: 0,
-    gender: "",
-    medicalHistory: "",
-    dob: new Date(),
-    metadata: {},
+  const [open, setOpen] = useState(false);
+
+  // Initialize react-hook-form
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: "",
+      age: 0,
+      gender: "",
+      relationship: "",
+      // medicalHistory: "",
+      // avatar: "",
+    },
   });
 
-  // State to manage dialog open/close
-  const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
-  const [error, setError] = useState<string | null>(null); // Add error state
-  // Handle input changes
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | { target: { name: string; value: string } }
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+  const {
+    handleSubmit,
+    control,
+    reset,
+    watch, // Add watch
+    setValue, // Add setValue
+    formState: { isSubmitting, errors },
+  } = form;
+
+  // Watch the gender field
+  const selectedGender = watch("gender");
+
+  // Define gender-specific relationship keys
+  const maleRelationships = useMemo(
+    () => [
+      "father",
+      "brother",
+      "son",
+      "paternal_grandfather",
+      "maternal_grandfather",
+      "paternal_uncle",
+      "maternal_uncle",
+      "male_cousin",
+      "great_grandfather",
+      "father_in_law_husband",
+      "father_in_law_wife",
+      "brother_in_law_sister_husband",
+      "son_in_law",
+      "stepfather",
+      "half_brother",
+    ],
+    []
+  );
+
+  const femaleRelationships = useMemo(
+    () => [
+      "mother",
+      "sister",
+      "daughter",
+      "paternal_grandmother",
+      "maternal_grandmother",
+      "paternal_aunt",
+      "maternal_aunt",
+      "female_cousin",
+      "great_grandmother",
+      "mother_in_law_husband",
+      "mother_in_law_wife",
+      "sister_in_law_brother_wife",
+      "daughter_in_law",
+      "stepmother",
+      "half_sister",
+    ],
+    []
+  );
+
+  // Determine filtered relationships based on selected gender
+  const filteredRelationships = useMemo(() => {
+    if (selectedGender === genders.male) {
+      return maleRelationships;
+    }
+    if (selectedGender === genders.female) {
+      return femaleRelationships;
+    }
+    return []; // Return empty if no gender selected or other value
+  }, [selectedGender, maleRelationships, femaleRelationships]);
 
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setIsLoading(true); // Set loading true
-    setError(null); // Clear previous errors
-
-    formData.age = Number(formData.age);
-    formData.ownerId = userId || "";
-    formData.dob = new Date(
-      new Date().setMonth(0, 1) - formData.age * 365 * 24 * 60 * 60 * 1000
+  const onSubmit = async (data: ProfileFormValues) => {
+    const dob = new Date(
+      new Date().setMonth(0, 1) - data.age * 365 * 24 * 60 * 60 * 1000
     );
-    // avatar is likely handled separately or uses a default
 
     try {
       const newProfile = await createProfile({
-        ...formData,
+        name: data.name,
+        age: data.age,
+        gender: data.gender,
+        relationship: data.relationship,
+        ownerId: userId,
+        dob: dob,
+        avatar: null, // Handle avatar separately if needed
+        medicalHistory: "", // Handle medical history separately if needed
         metadata: {},
       });
       setProfileId(newProfile.id);
       onSuccess(newProfile);
+      setOpen(false); // Close dialog on success
     } catch (err) {
       console.error("Error submitting profile creation:", err);
-      setError("An unexpected error occurred. Please try again.");
-    } finally {
-      setIsLoading(false); // Set loading false
+      // Display error using FormMessage or a dedicated error state if needed
+      form.setError("root", {
+        type: "manual",
+        message: "An unexpected error occurred. Please try again.",
+      });
     }
   };
 
-  // Function to reset form and error when dialog closes
+  // Function to reset form when dialog closes or opens
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
-      setError(null);
+      reset(); // Reset form fields and errors
     }
     setOpen(isOpen);
   };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
-      {/* Keep Trigger as is */}
-
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
-              <DialogTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start">
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  {t("ProfileCreateDialog.title")}
-                </Button>
-              </DialogTrigger>
+              <Button variant="ghost" className="w-full justify-start">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                {t("ProfileCreateDialog.title")}
+              </Button>
             </DialogTrigger>
           </TooltipTrigger>
           <TooltipContent>
@@ -128,7 +213,11 @@ const ProfileCreateDialog: React.FC<ProfileCreateDialogProps> = ({
       </TooltipProvider>
 
       <DialogContent
-        className="sm:max-w-[425px]"
+        className={
+          fullscreen
+            ? "h-full w-full max-w-full flex flex-col" // Fullscreen styles
+            : "sm:max-w-[425px] flex flex-col" // Default styles
+        }
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader>
@@ -137,161 +226,184 @@ const ProfileCreateDialog: React.FC<ProfileCreateDialogProps> = ({
             {t("ProfileCreateDialog.description")}
           </DialogDescription>
         </DialogHeader>
-        {/* Avatar Section - Placeholder */}
-        {/* <div className="flex flex-col items-center space-y-4">
-          <Avatar className="h-24 w-24 rounded">
-            <AvatarImage src={formData.avatar || ""} alt={formData.name} />
-            <AvatarFallback className="rounded bg-gradient-to-br from-blue-400 to-purple-400">
-              {fallbackChar}
-            </AvatarFallback>
-          </Avatar>
-          <CldUploadWidget
-            signatureEndpoint="/api/sign-cloudinary-params"
-            onSuccess={handleUploadResult}
-            options={{
-              sources: ["local"],
-              multiple: false,
-              folder: `/${userId}`,
-              maxFiles: 1,
-              maxFileSize: 5000000,
-              clientAllowedFormats: ["png", "jpeg", "jpg", "gif", "webp"],
-            }}
-            onQueuesEnd={(result, { widget }) => {
-              widget.close();
-            }}
-          >
-            {({ open }) => (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      type="button"
-                      onClick={() => open?.()}
+
+        {/* Avatar Section - Placeholder (Keep commented) */}
+        {/* ... */}
+
+        {/* Use Form component */}
+        {/* Wrap form in a scrollable container */}
+        <ScrollArea className="flex-grow">
+          <Form {...form}>
+            {/* Added id to form */}
+            <form id="profile-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4"> {/* Added padding */}
+              <FormField
+                control={control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <FormLabel className="text-right">
+                    {t("ProfileCreateDialog.nameLabel")}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className="col-span-3"
+                      placeholder={t("ProfileCreateDialog.namePlaceholder")}
+                    />
+                  </FormControl>
+                  <FormMessage className="col-span-4 text-right" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={control}
+              name="age"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <FormLabel className="text-right">
+                    {t("ProfileCreateDialog.ageLabel")}
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={(value) => field.onChange(Number(value))} // Convert value to number
+                      defaultValue={String(field.value)} // Convert defaultValue to string
                     >
-                      {t("ProfileCreateDialog.chooseAvatar")}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("ProfileCreateDialog.chooseAvatar")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue
+                          placeholder={t("ProfileCreateDialog.agePlaceholder")}
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.from({ length: 101 }, (_, i) => ( // Generate numbers 0-100
+                          <SelectItem key={i} value={String(i)}>
+                            {i}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="col-span-4 text-right" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <FormLabel className="text-right">
+                    {t("ProfileCreateDialog.genderLabel")}
+                  </FormLabel>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setValue("relationship", ""); // Reset relationship on gender change
+                    }}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue
+                          placeholder={t(
+                            "ProfileCreateDialog.genderPlaceholder"
+                          )}
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Object.values(genders).map((key) => (
+                        <SelectItem key={key} value={key}>
+                          {t(`common.${key}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="col-span-4 text-right" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={control}
+              name="relationship"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <FormLabel className="text-right">
+                    {t("ProfileCreateDialog.relationshipLabel")}
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={!selectedGender} // Disable if no gender selected
+                  >
+                    <FormControl>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue
+                          placeholder={
+                            !selectedGender
+                              ? t(
+                                  "ProfileCreateDialog.selectGenderFirstPlaceholder"
+                                ) // New placeholder
+                              : t(
+                                  "ProfileCreateDialog.relationshipPlaceholder"
+                                ) // Original placeholder
+                          }
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {/* Map over filtered relationships */}
+                      {filteredRelationships.map((key) => (
+                        <SelectItem key={key} value={key}>
+                          {/* Ensure the key exists in the original relationships object for safety */}
+                          {relationships[key as keyof typeof relationships]
+                            ? t(
+                                `common.relationship.${
+                                  relationships[key as keyof typeof relationships]
+                                }`
+                              )
+                            : key}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="col-span-4 text-right" />
+                </FormItem>
+              )}
+            />
+
+            {/* Medical History - Keep commented if not used */}
+            {/* <FormField ... /> */}
+
+            {/* Display root error message if any */}
+            {errors.root && (
+              <p className="text-sm text-red-500 px-1 py-2">
+                {errors.root.message}
+              </p>
             )}
-          </CldUploadWidget>
-        </div> */}
-        {/* Wrap in form */}
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            {/* Form Fields */}
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="create-name" className="text-right">
-                {t("ProfileCreateDialog.nameLabel")}
-              </Label>
-              <Input
-                id="create-name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="col-span-3"
-                placeholder={t("ProfileCreateDialog.namePlaceholder")}
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="create-age" className="text-right">
-                {t("ProfileCreateDialog.ageLabel")}
-              </Label>
-              <Input
-                id="create-age"
-                name="age"
-                type="number"
-                min="0"
-                max="120"
-                value={formData.age}
-                onChange={handleChange}
-                className="col-span-3"
-                placeholder={t("ProfileCreateDialog.agePlaceholder")}
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="create-gender" className="text-right">
-                {t("ProfileCreateDialog.genderLabel")}
-              </Label>
-              {/* Use select for gender */}
-              <Select
-                name="gender"
-                value={formData.gender}
-                onValueChange={(value) =>
-                  handleChange({ target: { name: "gender", value } })
-                }
-                required
-              >
-                <option value="">
-                  {t("ProfileCreateDialog.genderPlaceholder")}
-                </option>
-                {Object.values(genders).map((key) => (
-                  <option key={key} value={key}>
-                    {t(`common.${key}`)}
-                  </option>
-                ))}
-              </Select>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="create-relationship" className="text-right">
-                {t("ProfileCreateDialog.relationshipLabel")}
-              </Label>
-              <Input
-                id="create-relationship"
-                name="relationship"
-                value={formData.relationship}
-                onChange={handleChange}
-                className="col-span-3"
-                placeholder={Object.values(relationships).join(",")}
-                list="relationship-options-create" // Unique datalist ID
-                required
-              />
-              <datalist id="relationship-options-create">
-                {Object.values(relationships).map((key) => (
-                  <option key={key} value={t(`common.relationship.${key}`)} />
-                ))}
-              </datalist>
-            </div>
-            {/* <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="create-medicalHistory" className="text-right">
-                Medical History
-              </Label>
-              <textarea
-                id="create-medicalHistory"
-                name="medicalHistory"
-                value={formData.medicalHistory || ''}
-                onChange={handleChange}
-                className="col-span-3 flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" // Basic styling
-                placeholder="Optional: Any relevant medical history"
-              />
-            </div> */}
-          </div>
-          {/* Display error message if any */}
-          {error && <p className="text-sm text-red-500 px-1 py-2">{error}</p>}
-          <DialogFooter>
-            {/* Add Cancel button */}
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={isLoading}
-            >
-              {t("common.cancel")}
-            </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? t("common.processing") : t("common.create")}
-              {/* Show loading state */}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
+
+            {/* Removed DialogFooter from here */}
+          </form>
+        </Form>
+      </ScrollArea>
+      {/* Moved DialogFooter outside ScrollArea */}
+      <DialogFooter className="mt-auto p-4 border-t"> {/* Added padding and border */}
+        <Button
+          type="button"
+                variant="outline"
+                onClick={() => handleOpenChange(false)}
+                disabled={isSubmitting}
+        >
+          {t("common.cancel")}
+        </Button>
+        {/* Link button to form using form attribute */}
+        <Button type="submit" disabled={isSubmitting} form="profile-form">
+          {isSubmitting ? t("common.processing") : t("common.create")}
+        </Button>
+      </DialogFooter>
+    </DialogContent>
     </Dialog>
   );
 };
