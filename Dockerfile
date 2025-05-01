@@ -23,7 +23,7 @@ RUN \
 FROM base AS builder
 WORKDIR /app
 ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+# ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
