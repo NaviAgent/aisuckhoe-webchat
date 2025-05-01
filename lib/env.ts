@@ -70,10 +70,12 @@ const isServer = typeof window === "undefined";
 // export const serverEnv = isServer ? serverEnvSchema.parse(ENV) : null;
 // export const clientEnv = clientEnvSchema.parse(ENV);
 export const getClientEnv = () => {
+  console.log("ENV:client", ENV);
   return clientEnvSchema.parse(ENV);
 };
 
 export const getServerEnv = () => {
+  console.log("ENV:server", ENV);
   if (isServer) return serverEnvSchema.parse(ENV);
   else throw new Error("Invalid env");
 };
