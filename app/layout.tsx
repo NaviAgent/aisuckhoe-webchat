@@ -20,7 +20,7 @@ export default async function RootLayout({
   return (
     <ClerkProvider>
       {/* Use the dynamic locale for the lang attribute */}
-      <html lang={locale} suppressHydrationWarning>
+      <html lang={locale || "vi"} suppressHydrationWarning>
         {/* <GoogleTagManager gtmId={config.gtm.id} /> */}
         <head>
           <InitTheme />
@@ -29,7 +29,7 @@ export default async function RootLayout({
         </head>
         <body>
           {/* Wrap children with the I18nProvider */}
-          <I18nProvider locale={locale}>{children}</I18nProvider>
+          <I18nProvider locale={locale || "vi"}>{children}</I18nProvider>
         </body>
       </html>
     </ClerkProvider>

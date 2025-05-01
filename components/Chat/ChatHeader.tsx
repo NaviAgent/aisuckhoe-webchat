@@ -5,7 +5,7 @@ import { PlusCircle } from "lucide-react"; // Added Settings icon
 import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { useI18n } from "@/app/[locale]/i18n";
+import { useI18n } from "@/app/i18n";
 import {
   Tooltip,
   TooltipContent,

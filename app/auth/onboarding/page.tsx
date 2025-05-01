@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { updateUserMetadata } from "@/lib/clerk/user-service";
 import { useProfileListStore } from "@/store/useProfileListStore";
-import { useI18n } from "@/app/[locale]/i18n";
+import { useI18n } from "@/app/i18n";
 import { Select } from "@/components/ui/select";
 
 export default function Onboarding() {

@@ -19,7 +19,7 @@ import {
 } from "../ui/dialog";
 import { VisuallyHidden } from "../ui/visually-hidden";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useI18n } from "@/app/[locale]/i18n"; // Import the i18n hook
+import { useI18n } from "@/app/i18n"; // Import the i18n hook
 import {
   Tooltip,
   TooltipContent,

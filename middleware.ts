@@ -13,8 +13,8 @@ const I18nMiddleware = createI18nMiddleware({
 export default clerkMiddleware(
   async (auth, request: NextRequest, event: NextFetchEvent) => {
     // 1. Run i18n middleware first
-    const i18nResponse = I18nMiddleware(request);
-    if (i18nResponse) return i18nResponse;
+    // const i18nResponse = I18nMiddleware(request);
+    // if (i18nResponse) return i18nResponse;
 
     // 2. Run auth middleware
     // Note: Clerk's authMiddleware might handle async internally or expect direct return
