@@ -47,7 +47,7 @@ const ChatWindow = ({
   const apiHost = "https://flowise.aisuckhoe.com";
   const chatflowConfig = {
     /* Chatflow Config */
-    sessionId: "5d707fb5-b027-48dc-9596-acce11f5c066",
+    sessionId: chatId,
     // customerId
   };
 
