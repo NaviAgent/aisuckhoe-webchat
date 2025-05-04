@@ -17,7 +17,7 @@
   "dependencies": {
     "@clerk/nextjs": "^6.12.3",
     "@hookform/resolvers": "^5.0.1",
-    "@ivannguyendev/flowise-embed": "2.0.3",
+    "@ivannguyendev/flowise-embed": "2.0.4",
     "@next/third-parties": "^15.2.1",
     "@prisma/client": "^6.5.0",
     "@radix-ui/react-avatar": "^1.1.3",

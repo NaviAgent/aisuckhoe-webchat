@@ -15,8 +15,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.56.1(react@19.0.0))
       '@ivannguyendev/flowise-embed':
-        specifier: 2.0.3
-        version: 2.0.3
+        specifier: 2.0.4
+        version: 2.0.4
       '@next/third-parties':
         specifier: ^15.2.1
         version: 15.2.1(next@15.2.1(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
@@ -874,8 +874,8 @@ packages:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
 
-  '@ivannguyendev/flowise-embed@2.0.3':
-    resolution: {integrity: sha512-uGgeMo1DPFfxZMTYVwAfetxH3rWJr2/hw18ibEQVEpYfUCXCbec95g9An/NEdDr7bXEc97KkV7hIM/EkoHZ3IA==}
+  '@ivannguyendev/flowise-embed@2.0.4':
+    resolution: {integrity: sha512-5hnBa//nj6NIYwUcqWn5wAifF/IQylE4gTHmfIf52VgDkbpCBzXGitTZm61A5+yge8b/lHcA676HOebeI1zP6g==}
 
   '@jridgewell/gen-mapping@0.3.8':
     resolution: {integrity: sha512-imAbBGkb+ebQyxKgzv5Hu2nmROxoDOXHh80evxdoXNOrvAnVx7zimzc1Oo5h9RlfV4vPXaE2iM5pOFbvOCClWA==}
@@ -3216,6 +3216,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -4898,7 +4899,7 @@ snapshots:
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
-  '@ivannguyendev/flowise-embed@2.0.3':
+  '@ivannguyendev/flowise-embed@2.0.4':
     dependencies:
       '@babel/core': 7.26.9
       '@microsoft/fetch-event-source': 2.0.1

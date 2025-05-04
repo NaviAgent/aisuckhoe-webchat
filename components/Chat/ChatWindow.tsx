@@ -50,16 +50,20 @@ const ChatWindow = ({
     sessionId: chatId,
     // customerId
   };
+  let _chatHistory = chatHistory;
 
   const storageAdapter: StorageAdapter = {
     async getMessages(_chatflowid, chatId) {
-      return { chatHistory, chatId, lead: null };
+      console.log("[ChatWindow] getMessages", _chatHistory);
+      return { chatHistory: _chatHistory, chatId, lead: null };
     },
     async removeMessages(_chatflowid, chatId) {
       console.log("[ChatWindow] removeMessages", chatId);
     },
     async saveMessages(_chatflowid, { chatId, chatHistory, lead }) {
       if (!chatHistory) return;
+      console.log("[ChatWindow] saveMessages", chatHistory);
+      _chatHistory = chatHistory;
       saveChatHistory(chatId!, { chatHistory, lead });
     },
   };
